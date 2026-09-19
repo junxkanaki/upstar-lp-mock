@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>UPSTAR LP 全体モック v6（候補絞り込み / #454 C-5）</title>
+<title>UPSTAR LP 全体モック v7（最終版 LP v1.0 / #454 C-5）</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Crimson Text は v-w.co.kr/work-default の「See more …」で使われている書体（実測） -->
@@ -61,6 +61,16 @@ body.is-phone #site{display:none}
   box-shadow:0 24px 60px rgba(0,0,0,.28);background:#fff}
 .phone iframe{width:100%;height:100%;border:0;display:block}
 body.is-frame .shell,body.is-frame .phonewrap{display:none !important}
+/* v7: 切替UIの表示/非表示は手動トグルのみ（スクロール連動の自動非表示は
+   「確認しづらい」との指摘で廃止）。「× 隠す」で消し、右上の「切替UI」ピルで戻す。
+   隠している間は --shellh が 0 になり、fixed のヘッダーが画面上端まで上がる */
+body:not(.is-frame) .hdr{transition:transform .35s ease,top .35s ease}
+body.shell-off .shell{display:none}
+.shellshow{position:fixed;right:10px;top:10px;z-index:400;display:none;
+  appearance:none;border:1px solid rgba(255,255,255,.25);background:rgba(17,19,26,.85);color:#fff;
+  font:inherit;font-size:12px;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer;
+  backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,.35)}
+body.shell-off:not(.is-frame) .shellshow{display:inline-flex}
 
 /* ==========================================================================
    サイト本体
@@ -167,23 +177,6 @@ body.hero-mask .hero.on h1 .ln{clip-path:inset(0 0 0 0);
   transition:clip-path 1.15s cubic-bezier(.16,.86,.28,1)}
 body.hero-mask .hero.on h1 .ln:nth-child(2){transition-delay:.14s}
 
-/* --- slide: 選手写真がワイプで切り替わる --- */
-.hshots{position:absolute;inset:0;z-index:1;display:none}
-body.hero-slide .hshots{display:block}
-body.hero-slide .hero .shot{display:none}
-.hshots figure{position:absolute;inset:0;clip-path:inset(0 0 100% 0)}
-.hshots figure.on{clip-path:inset(0 0 0 0);
-  transition:clip-path 1.1s cubic-bezier(.72,0,.24,1)}
-.hshots img{width:100%;height:100%;object-fit:cover;object-position:52% 22%;
-  filter:grayscale(.15) contrast(1.06)}
-.hshots::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.18) 30%,rgba(0,0,0,.2) 55%,rgba(0,0,0,.9) 100%),
-             linear-gradient(90deg,rgba(0,0,0,.55),transparent 55%)}
-.hslide-nav{position:absolute;right:var(--pad);bottom:clamp(28px,6vh,72px);z-index:4;
-  display:none;gap:8px}
-body.hero-slide .hslide-nav{display:flex}
-.hslide-nav i{width:26px;height:2px;background:rgba(255,255,255,.3);display:block}
-.hslide-nav i.on{background:#fff}
 
 /* ==========================================================================
    1c. 参考サイトを実測して再現したヒーロー（3案）
@@ -235,50 +228,6 @@ body.hero-canvas:not(.past-hero) .hdr nav .dl{background:transparent;color:rgba(
 body.hero-vw:not(.past-hero) .hdr .logo,
 body.hero-canvas:not(.past-hero) .hdr .logo{filter:invert(1)}
 
-/* ==========================================================================
-   上部バーの別案 — dipsy（creator.dipsy.com/apply）のヘッダーを移植
-   実測値: 背景・枠・ぼかしなしの透明な全幅バー、ロゴ高20px・左右32px、
-   ナビは大文字13px/字間.02em/間隔22px、
-   CTAは先頭に●が付くピル型（radius:999px・padding:10px 22px・13px）。
-   参考サイトはスクロールしても透明のままだが、全面白ページだから成立している。
-   UPSTARは暗いセクションが混ざるため、ヒーロー通過後は白面のバーに切り替える */
-body.hdr-dipsy .hdr{padding:10px 32px}
-body.hdr-dipsy .hdr .menu,body.hdr-dipsy.hero-mq .hdr .menu{max-width:none;background:transparent;
-  border:0;backdrop-filter:none;border-radius:0;padding:0;
-  justify-content:flex-start;gap:clamp(28px,8vw,96px)}
-body.hdr-dipsy .hdr .logo{height:20px}
-body.hdr-dipsy .hdr nav{flex:1;gap:22px}
-body.hdr-dipsy .hdr nav .lk{font-size:13px;font-weight:600;letter-spacing:.02em;
-  text-transform:uppercase}
-body.hdr-dipsy .hdr nav .dl{border-radius:999px;padding:10px 22px;font-size:13px;font-weight:600;
-  letter-spacing:.02em;display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
-body.hdr-dipsy .hdr nav .dl::before{content:"";width:7px;height:7px;border-radius:50%;
-  background:currentColor}
-/* CTA群だけ右端へ寄せる（ロゴ→ナビは左寄せの一かたまり） */
-body.hdr-dipsy .hdr nav .lk + .dl{margin-left:auto}
-/* 暗いヒーローでは白文字＋白ピル。白背景ヒーロー4案では黒文字＋黒ピルに反転 */
-body.hdr-dipsy .hdr nav .dl{background:#fff;color:#0a0a0b}
-body.hdr-dipsy.hero-mq:not(.past-hero) .hdr .logo,
-body.hdr-dipsy.hero-vw:not(.past-hero) .hdr .logo,
-body.hdr-dipsy.hero-canvas:not(.past-hero) .hdr .logo,
-body.hdr-dipsy.hero-work:not(.past-hero) .hdr .logo{filter:invert(1)}
-body.hdr-dipsy.hero-mq:not(.past-hero) .hdr nav .lk,
-body.hdr-dipsy.hero-vw:not(.past-hero) .hdr nav .lk,
-body.hdr-dipsy.hero-canvas:not(.past-hero) .hdr nav .lk,
-body.hdr-dipsy.hero-work:not(.past-hero) .hdr nav .lk{color:#0a0a0b;
-  font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase}
-body.hdr-dipsy.hero-mq:not(.past-hero) .hdr nav .dl,
-body.hdr-dipsy.hero-vw:not(.past-hero) .hdr nav .dl,
-body.hdr-dipsy.hero-canvas:not(.past-hero) .hdr nav .dl,
-body.hdr-dipsy.hero-work:not(.past-hero) .hdr nav .dl{background:#0a0a0b;color:#fff;
-  border-radius:999px;padding:10px 22px;font-size:13px;font-weight:600;letter-spacing:.02em;
-  text-transform:none}
-/* ヒーローを過ぎたら白面バー＋黒文字（どのセクションの上でも読めるように） */
-body.hdr-dipsy.past-hero .hdr{background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.08)}
-body.hdr-dipsy.past-hero .hdr .menu{background:transparent}
-body.hdr-dipsy.past-hero .hdr .logo{filter:invert(1)}
-body.hdr-dipsy.past-hero .hdr nav .lk{color:#0a0a0b}
-body.hdr-dipsy.past-hero .hdr nav .dl{background:#0a0a0b;color:#fff}
 
 /* --- vw --- */
 .hvw{position:absolute;inset:0;z-index:2;display:none;background:#fff;color:#000}
@@ -310,72 +259,6 @@ body.show-copy.hero-vw .hero .inner h1{display:none}
 body.show-copy.hero-vw .hero .sub p{color:rgba(0,0,0,.72)}
 body.show-copy.hero-vw .hero .btn-o{border-color:rgba(0,0,0,.3);color:#000}
 
-/* --- canvas --- */
-.hcv{position:absolute;inset:0;z-index:2;display:none;background:#fff;overflow:hidden;
-  cursor:grab;touch-action:none}
-.hcv.drag{cursor:grabbing}
-body.hero-canvas .hcv{display:block}
-body.hero-canvas .hero{background:#fff;color:#000}
-.hcv .plane{position:absolute;left:0;top:0;will-change:transform}
-.hcv .it{position:absolute;overflow:hidden;background:#f1f1f1}
-.hcv .it img{width:100%;height:100%;object-fit:cover}
-/* 写真が小さく密になったぶん、中央の ENTER が写真に重なって読めなくなる。
-   白のにじみを1枚敷いて可読性を確保する */
-.hcv::after{content:"";position:absolute;left:50%;top:50%;width:560px;height:560px;
-  transform:translate(-50%,-50%);z-index:2;pointer-events:none;
-  background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,.8) 42%,rgba(255,255,255,0) 100%)}
-
-/* 参考サイトの「scroll / drag」「See more …（セリフ体イタリック）」は
-   UPSTAR のトーンに合わないため置き換えた。本文と同じ書体で日本語にしている。 */
-.hcv .hint{position:absolute;left:50%;top:calc(50% - 152px);transform:translateX(-50%);z-index:3;
-  font-size:12px;font-weight:600;letter-spacing:.34em;color:rgba(0,0,0,.45);
-  white-space:nowrap;pointer-events:none}
-/* イントロの代わりにする「入口」。押すと面が引いて本編（写真ヒーロー）へ抜ける。
-   丸ボタンが野暮ったいという指摘を受け、3案を切り替えられるようにした。
-   ・line  ロゴマーク＋下に細い罫線。ホバーで罫線が左から伸びる（既定）
-   ・plate ロゴマークが白い正方形の中にあり、ホバーで黒に反転する
-   ・bar   画面下端の全幅バー。ロゴは置くだけ */
-.hcv .enter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
-  appearance:none;border:0;background:none;font:inherit;color:#000;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:26px}
-.hcv .enter .lg{width:100%;height:100%;object-fit:contain;display:block;
-  transition:filter .45s ease}
-.hcv .enter .plate{display:block;width:104px;height:104px;padding:0;
-  transition:background .45s ease,padding .45s ease}
-.hcv .enter .lb{display:flex;flex-direction:column;align-items:center;gap:9px}
-.hcv .enter .lb em{font-style:normal;font-size:12px;font-weight:700;
-  color:rgba(0,0,0,.55);letter-spacing:.2em}
-.hcv .enter .lb b{display:block;width:120px;height:1px;background:rgba(0,0,0,.18);
-  position:relative;overflow:hidden}
-.hcv .enter .lb b::after{content:"";position:absolute;inset:0;background:#0b0b0b;
-  transform:scaleX(0);transform-origin:0 50%;transition:transform .55s cubic-bezier(.16,.86,.28,1)}
-.hcv .enter:hover .lb b::after{transform:scaleX(1)}
-
-/* plate: ロゴが白い面に載り、ホバーで黒へ反転 */
-body.ent-plate .hcv .enter .plate{width:132px;height:132px;padding:22px;background:#fff;
-  box-shadow:0 18px 50px rgba(0,0,0,.12)}
-body.ent-plate .hcv .enter:hover .plate{background:#0b0b0b}
-body.ent-plate .hcv .enter:hover .lg{filter:invert(1)}
-body.ent-plate .hcv .enter .lb b{display:none}
-
-/* bar: 下端の全幅バー。ロゴは中央に置くだけで、押す場所はバー */
-.hcv .entbar{position:absolute;left:0;right:0;bottom:0;z-index:3;display:none;
-  appearance:none;border:0;border-top:1px solid rgba(0,0,0,.14);background:rgba(255,255,255,.86);
-  backdrop-filter:blur(10px);font:inherit;color:#0b0b0b;cursor:pointer;
-  padding:22px 24px;align-items:center;justify-content:center;gap:14px;
-  font-size:13px;font-weight:700;letter-spacing:.2em;
-  transition:background .35s ease,color .35s ease}
-.hcv .entbar i{font-style:normal;transition:transform .35s ease}
-.hcv .entbar:hover{background:#0b0b0b;color:#fff}
-.hcv .entbar:hover i{transform:translateX(6px)}
-body.ent-bar .hcv .entbar{display:flex}
-body.ent-bar .hcv .enter{pointer-events:none}
-body.ent-bar .hcv .enter .lb{display:none}
-/* 抜けるときは面が奥に引きながら白へ溶ける */
-.hcv.exit{pointer-events:none}
-.hcv.exit .plane{transform-origin:50% 50%;transition:transform 1.1s cubic-bezier(.6,0,.2,1)}
-.hcv.exit{opacity:0;transition:opacity .9s ease .2s}
-.hcv.exit .hint,.hcv.exit .enter{opacity:0;transition:opacity .35s ease}
 /* ==========================================================================
    1d. UPSTAR独自案（模倣ではなく、UPSTARの素材からしか作れない動きにする）
 
@@ -403,10 +286,26 @@ body.hero-wall .hero{background:#06070a}
   filter:grayscale(1) brightness(.5) contrast(1.1)}
 .hwall .cell.near img{filter:none}
 /* セルは拡大時に z-index を持つので、名前はそれより上に置く */
-.hwall .nm{position:absolute;left:var(--pad);bottom:clamp(28px,6vh,72px);z-index:9999;
-  font-size:13px;letter-spacing:.2em;color:#fff;pointer-events:none;
+/* v7修正: 左下固定だと「見出しを重ねる」の見出し・コピーと重なるため、
+   固定位置をやめてカーソルの右上に追従させる（座標はJSのframe()が書く） */
+.hwall .nm{position:absolute;left:0;top:0;z-index:9999;transform:translate(16px,-120%);
+  font-size:13px;letter-spacing:.2em;color:#fff;pointer-events:none;white-space:nowrap;
   background:rgba(6,7,10,.72);padding:8px 14px;border-radius:999px;backdrop-filter:blur(8px)}
 .hwall .nm:empty{display:none}
+
+/* v7修正: 顔の壁では上部バーを不透明の黒にする（半透明だと顔の格子が透けて濁る） */
+body.hero-wall .hdr .menu{background:var(--ink)}
+
+/* v7修正: 見出しを重ねたとき、コピー「勝った日も…」とCTAが
+   灰色の顔の格子と同化して読めない。下部に黒のスクリムを敷いて文字を立たせる。
+   セルは拡大時に z-index 〜205 を持つため、スクリムはそれより上・選手名(9999)より下 */
+body.show-copy.hero-wall .hwall::after{content:"";position:absolute;left:0;right:0;bottom:0;
+  height:62%;z-index:600;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(6,7,10,.6) 46%,rgba(6,7,10,.95))}
+body.show-copy.hero-wall .hero .sub p{color:#fff;text-shadow:0 1px 16px rgba(0,0,0,.6)}
+/* Google Play の枠線ボタンは背景と同化するため、暗色の面とはっきりした枠を足す */
+body.show-copy.hero-wall .hero .btn-o{background:rgba(6,7,10,.55);
+  border-color:rgba(255,255,255,.85);backdrop-filter:blur(6px)}
 
 /* ==========================================================================
    1e. work = https://www.v-w.co.kr/work-default の忠実な再現（2回目）
@@ -446,32 +345,7 @@ body.hero-work .hwk{display:block}
   display:grid;place-items:center;font-style:normal;color:#fff;font-size:19px;line-height:1}
 .hwk .grid i::after{content:"→"}
 
-/* ==========================================================================
-   1f. ring = UPSTAR独自案（3Dの円環）
-   選手写真を円柱状に並べて回す。カーソルの左右で回転速度、上下で見上げ角が変わる。
-   平面をパンする参考サイト群とは別方向の「奥行き」を使った案。
-   ========================================================================== */
-.hringwrap{position:absolute;inset:0;z-index:1;display:none;overflow:hidden;
-  background:radial-gradient(120% 80% at 50% 45%,#12141a 0%,#06070a 70%);
-  perspective:1400px;touch-action:none;cursor:grab}
-.hringwrap:active{cursor:grabbing}
-body.hero-ring .hringwrap{display:block}
-body.hero-ring .hero{background:#06070a}
-body.hero-ring .hero .shot,body.hero-ring .hero .who{display:none}
-.hring{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
-.hring .cd{position:absolute;left:-100px;top:-135px;width:200px;height:270px;overflow:hidden;
-  background:#0d0f14;box-shadow:0 30px 60px rgba(0,0,0,.5)}
-.hring .cd img{width:100%;height:100%;object-fit:cover;filter:grayscale(.35) contrast(1.05)}
-.hringwrap .vig{position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:linear-gradient(90deg,#06070a 0%,rgba(6,7,10,0) 22%,rgba(6,7,10,0) 78%,#06070a 100%),
-             linear-gradient(180deg,rgba(6,7,10,.85) 0%,rgba(6,7,10,0) 26%,rgba(6,7,10,0) 62%,#06070a 100%)}
-/* 見出しと重なるので、円環の上に置く */
-.hringwrap .nm{position:absolute;left:0;right:0;top:clamp(112px,17vh,180px);z-index:3;text-align:center;
-  font-size:13px;letter-spacing:.24em;color:rgba(255,255,255,.8);pointer-events:none}
 
-body.show-copy.hero-canvas .hero .inner{color:#000;z-index:4}
-body.show-copy.hero-canvas .hero .sub p{color:rgba(0,0,0,.72)}
-body.show-copy.hero-canvas .hero .btn-o{border-color:rgba(0,0,0,.3);color:#000}
 
 /* --- プリローダー（ystudio の 0→100%） --- */
 .preload{position:fixed;inset:0;z-index:500;background:var(--ink);color:#fff;
@@ -479,48 +353,44 @@ body.show-copy.hero-canvas .hero .btn-o{border-color:rgba(0,0,0,.3);color:#000}
 /* hidden 属性だけでは display:grid に負けるので明示的に消す */
 .preload[hidden]{display:none}
 .preload.done{opacity:0;visibility:hidden}
-.preload .word{font-size:clamp(38px,7.4vw,116px);font-weight:900;letter-spacing:-.045em;
-  text-transform:uppercase;line-height:.92;text-align:center}
-.preload .bar{position:absolute;left:var(--pad);right:var(--pad);bottom:34px;
-  display:flex;justify-content:space-between;font-size:11px;letter-spacing:.24em;
-  color:rgba(255,255,255,.5);text-transform:uppercase}
-.preload .line{position:absolute;left:var(--pad);right:var(--pad);bottom:60px;height:1px;
-  background:rgba(255,255,255,.16)}
-.preload .line span{display:block;height:100%;width:0;background:#fff}
 
 /* ==========================================================================
-   1g. mq = dipsy（creator.dipsy.com/apply）のファーストビューを移植
-   実測どおり横スクロールのマーキー3段・白地。タイルは186px角。
+   v7: イントロ4案。.preload の v-クラスで切り替える（シェルの「イントロ」）。
+   Webの近作リサーチ（Awwwards / htmlBurger 2025-26）で使われている型のうち、
+   写真ブランドに向く3型（モンタージュ / グリッド / タイポ×ワイプ）を追加した。
+   .pv は display:contents で .preload のグリッドにそのまま参加させる
    ========================================================================== */
-body.hero-mq .hero{background:#fff;color:#0a0a0b}
-/* 白いマーキー背景だと半透明のヘッダーが薄く浮くので、バーは不透明の黒にする */
-body.hero-mq .hdr .menu{background:var(--ink)}
-body.hero-mq .hero .shot,body.hero-mq .hero .who,body.hero-mq .hero .hslide-nav{display:none}
-body.hero-mq .hero .scrollhint{color:rgba(0,0,0,.45)}
-body.hero-mq .hero .inner{display:none}
-body.show-copy.hero-mq .hero .inner{display:flex;color:#0a0a0b;z-index:5}
-body.show-copy.hero-mq .hero .sub p{color:rgba(0,0,0,.72)}
-body.show-copy.hero-mq .hero .btn-o{border-color:rgba(0,0,0,.3);color:#000}
-/* 帯の動きはCSSアニメーションではなくJSのrAFで回している。
-   参考サイトの実装（_next/static/chunks/0gppgb45.9ulf.js の LpEffects）を読み、
-   同じ数値・同じ挙動にしてある。詳細はJS側のコメントを参照。 */
-.hmq{position:absolute;inset:0;z-index:2;display:none;background:#fff;overflow:hidden;
-  flex-direction:column;justify-content:center;gap:34px;
-  cursor:grab;touch-action:pan-y}
-.hmq.dragging{cursor:grabbing}
-body.hero-mq .hmq{display:flex}
-.hmq .row{display:flex;width:max-content;gap:34px;will-change:transform}
-.hmq .tl{width:186px;height:186px;flex:0 0 auto;overflow:hidden;will-change:transform;
-  opacity:0;transform:translateY(18px) scale(.94)}
-/* 参考サイトはセルごとに --ed（0〜0.7秒）の遅延で出す */
-.hmq.go .tl{opacity:1;transform:none;
-  transition:opacity .7s ease var(--ed,0s),
-             transform .8s cubic-bezier(.16,.86,.28,1) var(--ed,0s)}
-.hmq .tl img{width:100%;height:100%;object-fit:cover}
-.hmq .tl.txt{display:grid;place-items:center;color:#0a0a0b;
-  font-size:19px;font-weight:800;line-height:1.22;letter-spacing:-.01em;text-align:center}
-.hmq .tl.icon{display:grid;place-items:center;background:#0a0a0b;border-radius:38px;padding:34px}
-.hmq .tl.icon img{object-fit:contain}
+.preload .pv{display:none}
+.preload.v-flash .pv-flash,.preload.v-tiles .pv-tiles{display:contents}
+
+/* --- flash: 写真と言葉を高速で切り替えるモンタージュ → ロゴで締める ---
+   （中央パネル化・16枚増量を試したが、9/19指示で当初の全画面カバー・8枚構成に戻した） */
+.pv-flash .fimg{position:absolute;inset:0;background-size:cover;background-position:50% 24%;
+  opacity:0;filter:grayscale(.3) contrast(1.1) brightness(.82)}
+.pv-flash .fword{position:relative;z-index:2;font-size:clamp(28px,4.6vw,72px);font-weight:900;
+  letter-spacing:-.03em;line-height:1.3;text-align:center;opacity:0;padding:0 var(--pad)}
+.pv-flash .flogo{position:absolute;left:50%;top:50%;translate:-50% -50%;
+  width:clamp(180px,26vw,340px);opacity:0;scale:1.14}
+.pv-flash .flogo.on{opacity:1;scale:1;
+  transition:opacity .5s ease,scale .9s cubic-bezier(.16,.86,.28,1)}
+
+/* --- tiles: 選手の顔タイルが敷き詰まり、ロゴを見せてから散って本編へ。
+       ヒーロー「顔の壁」と地続きの、UPSTARの素材でしか作れない独自案 --- */
+.pv-tiles .tgrid{position:absolute;inset:0;overflow:hidden}
+.pv-tiles .tgrid i{position:absolute;overflow:hidden;opacity:0;transform:scale(.6);
+  transition:opacity .45s ease var(--d,0s),transform .6s cubic-bezier(.16,.86,.28,1) var(--d,0s)}
+.pv-tiles .tgrid i img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.55)}
+.pv-tiles.in .tgrid i{opacity:1;transform:none}
+.pv-tiles.out .tgrid i{opacity:0;transform:translate(var(--ox,0px),var(--oy,0px)) scale(.5);
+  transition:opacity .55s ease var(--d,0s),transform .8s cubic-bezier(.6,0,.3,1) var(--d,0s)}
+.pv-tiles .tlogo{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:2;
+  width:clamp(180px,26vw,340px);opacity:0;scale:1.1;
+  filter:drop-shadow(0 18px 44px rgba(0,0,0,.7))}
+.pv-tiles .tlogo.on{opacity:1;scale:1;
+  transition:opacity .5s ease,scale .8s cubic-bezier(.16,.86,.28,1)}
+
+
+
 
 /* ==========================================================================
    2. ステートメント — 黒面に巨大コピーと数字
@@ -536,16 +406,11 @@ body.hero-mq .hmq{display:flex}
   animation:stmtFloat 7s ease-in-out infinite}
 @keyframes stmtFloat{50%{transform:translateY(-12px)}}
 body.anim-low .stmt .shot img{animation:none}
-/* 反転して白面になると白い端末が背景に溶けるので、うっすら影を敷く */
-body.invfx.inverted .stmt .shot{
-  background:radial-gradient(58% 58% at 50% 52%,rgba(0,0,0,.07),transparent 72%)}
-body.invfx.inverted .stmt .shot img{filter:drop-shadow(0 30px 60px rgba(0,0,0,.22))}
 
 /* 英字の見出しにする場合の詰め */
 .stmt .big.en{letter-spacing:-.045em;line-height:.94;text-transform:uppercase}
 .stmt .lead{margin-top:clamp(28px,4.5vh,56px);font-size:clamp(16px,1.9vw,28px);
   line-height:1.85;color:rgba(255,255,255,.82);font-weight:500}
-body.invfx.inverted .stmt .lead{color:rgba(0,0,0,.72)}
 .stmt .nums{display:flex;gap:clamp(28px,7vw,120px);margin-top:clamp(44px,7vh,96px);flex-wrap:wrap}
 .stmt .nums div{display:flex;flex-direction:column;gap:6px}
 .stmt .nums b{font-size:clamp(44px,7vw,104px);font-weight:900;letter-spacing:-.045em;line-height:.9;
@@ -606,6 +471,127 @@ body.invfx.inverted .stmt .lead{color:rgba(0,0,0,.72)}
   background:#141414;border-radius:999px;z-index:2}
 .fscene .who{position:absolute;left:var(--pad);bottom:clamp(18px,3vh,34px);z-index:4;
   font-size:12px;letter-spacing:.14em;color:rgba(255,255,255,.55)}
+
+/* ==========================================================================
+   v7: 全画面シーンの画像配置案
+   端末1枚だけでは面が持たないため、機能ごとに
+   「端末の後ろ＝空気感の写真（大きめ・傾ける）」
+   「端末の前＝アプリUIの切り出し（小さめ・逆に傾ける）」の2枚を添える構成。
+   いまは灰色の仮画像。実画像が用意され次第、.sat の中身を <img> に差し替える
+   （.sat 自体の枠・影・角丸はそのまま使える）。
+   白面・黒面の両方に載るため、仮画像はどちらでも見える中間グレーにしている。
+   ========================================================================== */
+.fscene .sat{position:absolute;display:grid;place-items:center;text-align:center;
+  border-radius:16px;padding:14px;overflow:hidden;
+  background:repeating-linear-gradient(45deg,rgba(127,127,127,.12) 0 12px,rgba(127,127,127,.22) 12px 24px);
+  border:1px dashed rgba(127,127,127,.6);
+  color:rgba(127,127,127,1);font-size:11px;font-weight:700;letter-spacing:.05em;line-height:1.8;
+  box-shadow:0 26px 56px rgba(0,0,0,.22)}
+.fscene .sat b{display:block;font-size:12px;letter-spacing:0}
+.fscene .sat{backdrop-filter:blur(3px)}  /* 仮画像が重なったときラベル文字が混ざらないように */
+/* 3シーンの端末サイズを統一（9/19指摘）。基準はライブ配信の拡大サイズ（最大300px）で、
+   ファンレター（フレームなし.bare）・本音が届く（フレーム付き）とも同じ幅にする */
+.fscene .app{width:clamp(180px,21vw,300px)}
+.fscene .app.bare{width:clamp(180px,21vw,300px)}
+.fscene .sat-a{z-index:-1}   /* 端末の後ろ */
+.fscene .sat-b{z-index:5;background-color:rgba(203,203,209,.4)}    /* 端末の前 */
+/* PCで文言と端末クラスタが離れすぎる・仮画像が画面端で見切れるという指摘（9/19）への調整。
+   端末を列の端寄せ→中央寄せに変え、はみ出しを縮めて外側に余白を残す */
+.fscene .app{justify-self:center}
+.fscene.rev .app{justify-self:center}
+/* 端末内の既存スクショ（旧 shot-fanletter.png / shot-chat.png）も差し替え前提の仮画像にする。
+   .scr の中に静的配置で収め、サイズは端末カットの縦横比で確保する */
+.fscene .sat-scr{position:static;width:100%;aspect-ratio:9/19.5;z-index:auto;border-radius:28px}
+/* v7: UI系の仮画像には、upstar-app のソースコード（色・寸法・文言を実読）から
+   再現した画像案（assets/draft-*.png、生成元は draft-src/）を入れる。
+   写真系（選手の写真・配信スチル・オフショット）はソースから作れないため灰色のまま */
+.fscene .sat.filled{background:none;border:0;padding:0;overflow:hidden}
+.fscene .sat.filled img{width:100%;height:100%;object-fit:cover;display:block}
+.fscene .sat.filled .dtag{position:absolute;left:8px;top:8px;z-index:2;background:rgba(17,19,26,.78);
+  color:#fff;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:999px;
+  font-style:normal}
+/* ファンレターの端末カット: 画像自体に端末フレームが入っているため角丸を画像に合わせる */
+.fscene .app.bare .sat-scr.filled{border-radius:18px;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.fscene .app:not(.bare) .sat-scr.filled{border-radius:0}
+/* 1枚目: ファンレター — 前後とも「手紙の拡大」カード（2026-09-19 ユーザー提供画像）。
+   枠の縦横比は提供画像の実寸（後ろ=04: 900x857 / 前=03: 900x408）に合わせ、切り抜きが起きないようにする。
+   UI画像=LP風:手紙3枚 のときは、後ろの1枚が3枚構成（draft-lp-fanletter-trio、縦4:5）に差し替わる */
+/* 後ろのカードが端末と被りすぎるため、上へ大きくはみ出させる（9/19指摘） */
+.fscene:nth-of-type(1) .sat-a{width:94%;aspect-ratio:900/857;right:-28%;top:-13%;rotate:6deg}
+.fscene:nth-of-type(1) .sat-b{width:96%;aspect-ratio:900/408;left:-32%;bottom:9%;rotate:-5deg}
+/* 提供カード（03/04）は角丸が画像側に焼き込まれた透過PNG。
+   枠側の16px角丸クリッピングだと四隅が切れるため、クリッピングと矩形シャドウをやめ、
+   画像のアルファ形状に沿う drop-shadow に切り替える（9/19指摘対応） */
+.fscene:nth-of-type(1) .sat-a.filled,.fscene:nth-of-type(1) .sat-b.filled{
+  border-radius:0;overflow:visible;box-shadow:none;
+  filter:drop-shadow(0 22px 40px rgba(10,10,11,.24))}
+/* 2枚目: ライブ配信 — メイン画面（端末）のみ（9/19指示でサテライト2枚を廃止）。
+   端末サイズは上の統一ルール（最大300px）に含まれる。
+   画面が暗い画像のため、.scr の白背景が角丸の縁にサブピクセルで覗いて
+   白線に見える（9/19指摘）→ このシーンだけ黒下地にする */
+.fscene:nth-of-type(2) .app .scr{background:#000}
+/* 3枚目: 日常のやりとり — メイン端末のみ（9/19指示で前後のサテライトを廃止） */
+@media(max-width:900px){
+  /* 提供画像が入ったため、スマホでも前後のカードを表示する（9/19指摘対応）。
+     はみ出し量はPCより詰めて画面端で切れないようにする。
+     端末のサイズ・中央寄せはファイル末尾の上書きブロックで行う
+     （既存のレスポンシブ規則が後方にあり、ここで書いても負けるため） */
+  .fscene:nth-of-type(1) .sat-a{right:-16%;top:-7%}  /* スマホは文言と重ならない範囲で上へ */
+  .fscene:nth-of-type(1) .sat-b{left:-20%}
+}
+
+/* ==========================================================================
+   v7: 全画面シーンの入場アニメは「交差スライド」で確定（2026-09-19）。
+   文言と端末が左右から滑り込む（rev面は向きを反転）。
+   フェードアップ/マスクワイプ/視差の3案と切替UIは削除済み
+   ========================================================================== */
+
+body.fanm-slide .feat .rise{
+  transition:opacity .9s cubic-bezier(.16,.86,.28,1),transform 1.1s cubic-bezier(.16,.86,.28,1)}
+body.fanm-slide .feat .fscene .inner > .rise:first-of-type{transform:translateX(-64px)}
+body.fanm-slide .feat .fscene .app{transform:translateX(64px) rotate(2deg)}
+body.fanm-slide .feat .fscene.rev .inner > .rise:first-of-type{transform:translateX(64px)}
+body.fanm-slide .feat .fscene.rev .app{transform:translateX(-64px) rotate(-2deg)}
+/* 終状態は開始指定より詳細度を上げる。開始セレクタが4〜7クラス相当あり、
+   これに負けると要素が開始位置のまま固定される（9/19不具合修正。
+   .rev の端末→通常シーンの文言の順で2度発生したため、全パターンを明示的に列挙） */
+body.fanm-slide .feat .rise.in,
+body.fanm-slide .feat .fscene .app.rise.in,
+body.fanm-slide .feat .fscene .inner > .rise.in:first-of-type,
+body.fanm-slide .feat .fscene.rev .app.rise.in,
+body.fanm-slide .feat .fscene.rev .inner > .rise.in:first-of-type{transform:none}
+
+/* ==========================================================================
+   v7: 機能エフェクト（紙飛行機・ハート・コメント・絵文字）の見せ方5案
+   （シェルの「エフェクト案」で切替。「機能エフェクト あり/なし」とは独立）
+   ・std   現行: 立ちのぼる（ハート/コメント）・弧を描いて散る（絵文字）・飛翔（紙飛行機）
+   ・big   ふわり大きめ: 1.5倍・数を減らし・1.45倍ゆっくり。1つずつを見せる
+   ・mini  小さく密に: 0.68倍・数1.6倍・少し速く。ライブの賑わい寄り
+   ・drift 横断フロート: 画面下部の帯を左→右へ漂いながら横切る（別軌道）
+   ・pop   ポップイン: 画面のあちこちでポンと弾んで消える（別軌道）
+   サイズ・数・速度・開始位置はJSのbuildFx()が組み直し、
+   軌道の差し替えはbodyクラスで animation-name だけを上書きする
+   ========================================================================== */
+/* コメントチップの文字サイズも案に合わせる */
+body.fxv-big .lvchip{font-size:17px;padding:12px 20px}
+
+/* ==========================================================================
+   v7: スマホ版の調整（9/19指示）
+   ========================================================================== */
+@media(max-width:900px){
+  /* FEATURES見出しと1枚目のシーン（New feature〜）の間隔が空きすぎる指摘への対応。
+     見出しの下余白と、1枚目だけ上余白を詰める */
+  .feathead{padding-bottom:10px}
+  .feat .fscene:first-of-type{padding-top:clamp(18px,3vh,28px)}
+  /* アプリ利用ガイド: 「利用ガイドを見る」ボタンを記事画像の下へ。
+     .gtxt を display:contents で解体し、文言→画像→ボタンの順に並べ替える */
+  .guide .gcols{display:flex;flex-direction:column}
+  .guide .gtxt{display:contents}
+  .guide .gtxt p{order:0}
+  .guide .gcard{order:1;margin-top:4px}
+  .guide .gbtn{order:2;align-self:stretch;text-align:center;margin-top:18px}
+}
+
 
 /* ==========================================================================
    機能セクションの背景バリエーション
@@ -745,78 +731,7 @@ body.bg-blur .bgalt .bw{position:absolute;left:var(--pad);bottom:-4%;white-space
   text-transform:uppercase}
 .feathead .sub{color:rgba(255,255,255,.55);font-size:14px;margin-top:6px;
   transition:color .85s ease}
-body.invfx .feathead.inv{background:#fff;color:#0a0a0b}
-body.invfx .feathead.inv .sub{color:#6b6b68}
 
-/* ==========================================================================
-   4b. ATHLETES の見せ方（4案）
-   ・marq  2列の帯（現行）
-   ・grid  58人を敷き詰めて「人数」を見せる
-   ・list  名簿。名前と所属が読める（dipsy の CREATORS に近い並び）
-   ・focus 大きな1枚＋サムネイル。触った選手が主役に入れ替わる
-   ========================================================================== */
-.agrid,.alist,.afocus{display:none}
-body.ath-marq .marq{display:flex}
-body:not(.ath-marq) .marq{display:none}
-body.ath-grid .agrid{display:grid}
-body.ath-list .alist{display:grid}
-body.ath-focus .afocus{display:grid}
-
-/* --- grid --- */
-.agrid{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;padding:0 var(--pad)}
-.agrid a{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;background:#1a1a1c;
-  border-radius:4px}
-.agrid img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.72);
-  transition:filter .45s ease,transform .7s cubic-bezier(.16,.86,.28,1)}
-.agrid a:hover img{filter:none;transform:scale(1.06)}
-.agrid .cap{position:absolute;left:0;right:0;bottom:0;padding:10px 11px;
-  background:linear-gradient(180deg,transparent,rgba(0,0,0,.88));
-  transform:translateY(12px);opacity:0;transition:transform .35s ease,opacity .35s ease}
-.agrid a:hover .cap{transform:none;opacity:1}
-.agrid .cap .name{font-size:13px;font-weight:800;letter-spacing:-.01em}
-.agrid .cap .club{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px}
-
-/* --- list --- */
-.alist{grid-template-columns:1fr 1fr;gap:0 clamp(32px,5vw,80px);
-  max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
-.alist a{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;align-items:center;
-  padding:16px 0;border-top:1px solid rgba(255,255,255,.1)}
-.alist a:hover .nm{color:var(--accent-light)}
-.alist .av{width:56px;height:56px;border-radius:50%;overflow:hidden;background:#1a1a1c}
-.alist .av img{width:100%;height:100%;object-fit:cover;filter:grayscale(.4);
-  transition:filter .4s ease}
-.alist a:hover .av img{filter:none}
-.alist .nm{font-size:17px;font-weight:800;letter-spacing:-.01em;transition:color .3s ease}
-.alist .cl{font-size:12px;color:rgba(255,255,255,.55);margin-top:2px}
-
-/* --- focus --- */
-.afocus{grid-template-columns:minmax(0,.85fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
-  align-items:start;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
-.afocus .main{position:relative;aspect-ratio:4/5;overflow:hidden;background:#1a1a1c;border-radius:8px}
-.afocus .main img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  opacity:0;transition:opacity .55s ease}
-.afocus .main img.on{opacity:1}
-.afocus .main .cap{position:absolute;left:0;right:0;bottom:0;padding:clamp(18px,2.4vw,32px);
-  background:linear-gradient(180deg,transparent,rgba(0,0,0,.88));z-index:2}
-.afocus .main .name{font-size:clamp(20px,2.4vw,34px);font-weight:900;letter-spacing:-.02em}
-.afocus .main .club{font-size:13px;color:rgba(255,255,255,.65);margin-top:4px}
-.afocus .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;
-  max-height:min(72vh,720px);overflow-y:auto;padding-right:6px}
-.afocus .thumbs::-webkit-scrollbar{width:6px}
-.afocus .thumbs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:3px}
-.afocus .thumbs button{appearance:none;border:0;padding:0;background:#1a1a1c;cursor:pointer;
-  aspect-ratio:1;overflow:hidden;border-radius:3px;position:relative}
-.afocus .thumbs img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.6);
-  transition:filter .35s ease}
-.afocus .thumbs button:hover img,.afocus .thumbs button.on img{filter:none}
-.afocus .thumbs button.on{outline:2px solid var(--accent)}
-
-@media(max-width:900px){
-  .alist{grid-template-columns:1fr}
-  .afocus{grid-template-columns:1fr;gap:20px}
-  .afocus .thumbs{max-height:none;grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}
-  .agrid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:6px}
-}
 
 /* ==========================================================================
    5. プラン
@@ -970,67 +885,7 @@ body.plan-3d .notes,body.plan-holo .notes{margin-top:clamp(76px,11vh,140px)}
 .notes ol{margin:0;padding:0 var(--s4) var(--s4) calc(var(--s4) + 1.2em);color:var(--muted);
   font-size:14px;display:flex;flex-direction:column;gap:9px}
 
-/* ==========================================================================
-   3b. FEATURES の別案 — dipsy（creator.dipsy.com/apply）の SERVICE を移植
-   実測値: カード見出し20px/700/lh29px・中央揃え、黒丸バッジ、
-   本文14px #6b6b68、画像は薄いグレー面の中に端末を置いて上端で切る。
-   ========================================================================== */
-.fcards{display:none;background:#fff;color:#0a0a0b;padding:clamp(72px,12vh,140px) 0}
-body.feat-cards .fcards{display:block}
-body.feat-cards .feat{display:none}
-.fcards h2{font-size:clamp(34px,6vw,96px);line-height:.94;letter-spacing:-.045em;font-weight:900;
-  text-transform:uppercase}
-.fcards .sub{color:#6b6b68;font-size:14px;margin-top:6px}
-.fcards .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:72px 32px;
-  margin-top:clamp(40px,6vh,72px)}
-.fcards .c{position:relative}
-.fcards .shot{background:#f1f1ef;height:314px;overflow:hidden;
-  display:flex;justify-content:center;align-items:flex-end}
-.fcards .phone{width:252px;height:272px;border:9px solid #111;border-bottom:0;
-  border-radius:34px 34px 0 0;overflow:hidden;background:#fff}
-.fcards .phone img{width:100%;height:auto}
-.fcards .badge{position:absolute;right:24px;top:-22px;width:88px;height:88px;border-radius:50%;
-  background:#0a0a0b;color:#fff;display:grid;place-items:center;
-  font-size:13px;font-weight:700;letter-spacing:.02em}
-.fcards h3{font-size:20px;font-weight:700;line-height:29px;text-align:center;margin:34px 0 14px}
-.fcards .c p{font-size:14px;color:#6b6b68;line-height:1.72}
-.fcards .c p b{color:#0a0a0b;font-weight:700}
-@media (max-width:900px){ .fcards .grid{grid-template-columns:1fr;gap:56px} }
 
-/* ==========================================================================
-   反転演出 — dipsy のスクロール連動の白黒反転を移植した案
-   ステートメントが画面の下半分に入ったらページ全体が黒→白へ0.85秒で反転する。
-   参考サイトは白→黒。v5は黒基調なので向きを逆にしている。
-   ========================================================================== */
-body.invfx #site,body.invfx .stmt,body.invfx .hero,
-body.invfx .hdr .menu,body.invfx .hdr nav .lk,body.invfx .hdr .logo{
-  transition:background-color .85s ease,color .85s ease,filter .85s ease}
-body.invfx.inverted .stmt{background:#fff;color:#0a0a0b}
-body.invfx.inverted .stmt .big em{color:var(--accent-dark)}
-body.invfx.inverted .stmt .nums span{color:rgba(0,0,0,.5)}
-body.invfx.inverted .stmt .ticker{color:rgba(0,0,0,.12)}
-body.invfx.inverted .hdr .menu{background:rgba(255,255,255,.9);border-color:rgba(0,0,0,.12)}
-body.invfx.inverted .hdr nav .lk{color:rgba(0,0,0,.86)}
-body.invfx.inverted .hdr nav .dl{background:#0a0a0b;color:#fff}
-body.invfx.inverted .hdr .logo{filter:invert(1)}
-
-/* 反転演出は全画面シーンにも効かせる。
-   写真はそのままに、覆っているグラデーションと文字色だけを白面へ反転させる。 */
-body.invfx .fscene{transition:background-color .85s ease,color .85s ease}
-body.invfx .fscene .bg::after,body.invfx .fscene .bg img,
-body.invfx .fscene p,body.invfx .fscene .who{transition:background .85s ease,filter .85s ease,color .85s ease}
-body.invfx .fscene.inv{background:#fff;color:#0a0a0b}
-body.invfx .fscene.inv .bg img{filter:grayscale(.35) contrast(1.02) brightness(1.06)}
-body.invfx .fscene.inv .bg::after{
-  background:linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.66) 46%,rgba(255,255,255,.34) 100%),
-             linear-gradient(180deg,rgba(255,255,255,.62),transparent 26%,rgba(255,255,255,.8))}
-body.invfx .fscene.rev.inv .bg::after{
-  background:linear-gradient(270deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.66) 46%,rgba(255,255,255,.34) 100%),
-             linear-gradient(180deg,rgba(255,255,255,.62),transparent 26%,rgba(255,255,255,.8))}
-body.invfx .fscene.inv p{color:rgba(0,0,0,.72)}
-body.invfx .fscene.inv .kick{color:var(--accent-dark)}
-body.invfx .fscene.inv .who{color:rgba(0,0,0,.55)}
-body.invfx .fscene.inv .bgalt .bw{-webkit-text-stroke-color:rgba(0,0,0,.16)}
 
 /* ==========================================================================
    5c. アプリ利用ガイド（Figma node 1-62 / GuideFeature.tsx）
@@ -1042,7 +897,10 @@ body.invfx .fscene.inv .bgalt .bw{-webkit-text-stroke-color:rgba(0,0,0,.16)}
 .guide h2{font-size:clamp(24px,2.6vw,36px);line-height:1.3;letter-spacing:-.03em;font-weight:900}
 .guide .gcols{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1fr);
   gap:clamp(28px,5vw,80px);align-items:center;margin-top:clamp(32px,5vh,56px)}
-.guide .gtxt p{margin-top:var(--s3);font-size:15px;line-height:1.85;color:var(--muted);max-width:26em}
+/* v7: PC幅で見出し(最大36px)に対して本文15px固定が小さいという指摘（9/19）への対応。
+   PCでは18pxまで拡大し、1行が間延びしないよう行長も少し詰める */
+.guide .gtxt p{margin-top:var(--s3);font-size:clamp(15px,1.25vw,18px);line-height:1.85;
+  color:var(--muted);max-width:24em}
 /* 背景はシェルで2案を切替（既定は黒面）。
    黒面: 選手(黒)→PLAN(白)→ガイド(黒)→FAQ(薄グレー)と境目が最も明確
    薄グレー: FAQと同じ面色。落ち着くが直後のFAQと灰色が連続する */
@@ -1100,7 +958,6 @@ body.is-phone .stickycta{display:none}
 .fx-item{position:absolute;will-change:transform,opacity;opacity:0;animation-play-state:paused;
   --dx1:0px; --dx2:0px; --dx3:0px; --op:1}
 .fxlayer.run .fx-item{animation-play-state:running}
-body.fx-off .fxlayer{display:none}
 
 /* 共通の上昇カーブ。実画面のライブ配信と同じく、端末のあたりから立ち上がる */
 @keyframes fxRise{
@@ -1203,73 +1060,45 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
   .mcard{width:60vw}
   .ftr .links{grid-template-columns:1fr}
 }
+
+/* ==========================================================================
+   v7: スマホ版 機能シーンの端末サイズ・位置（9/19指示）
+   左寄せ・最小180pxだと小さく右が空くため、3シーンとも中央寄せ＋約64vw（最大250px）へ。
+   上のレスポンシブ規則（justify-self:start）より後に置いて上書きする
+   ========================================================================== */
+@media(max-width:900px){
+  .fscene .app,.fscene.rev .app{width:min(64vw,250px);justify-self:center}
+}
 </style>
 </head>
 <body class="anim-mid">
 
 <div class="shell">
-  <b>UPSTAR LP 全体モック v6 <small>v5から候補を絞り込み · #454 / C-5</small></b>
-  <div class="seg"><span>アニメ</span>
-    <button data-anim="low">控えめ</button>
-    <button data-anim="mid" aria-pressed="true">標準</button>
-    <button data-anim="high">強め</button>
-  </div>
-  <div class="seg"><span>ヒーロー</span>
-    <button data-hero-mode="photo" aria-pressed="true">写真</button>
-    <button data-hero-mode="slide">写真ワイプ</button>
-    <button data-hero-mode="canvas">v-w work再現</button>
-    <button data-hero-mode="wall">独自:顔の壁</button>
-    <button data-hero-mode="ring">独自:3D円環</button>
-    <button data-hero-mode="mq">dipsy風マーキー</button>
-    <button id="introBtn">イントロ再生</button>
-    <button id="copyBtn">見出しを重ねる</button>
-  </div>
-  <div class="seg"><span>上部バー</span>
-    <button data-hdr="pill" aria-pressed="true">現行:浮きピル</button>
-    <button data-hdr="dipsy">dipsy風フラット</button>
-  </div>
-  <div class="seg"><span>work再現の入口</span>
-    <button data-ent="line" aria-pressed="true">罫線</button>
-    <button data-ent="plate">白面→反転</button>
-    <button data-ent="bar">下端バー</button>
-  </div>
-  <div class="seg"><span>機能</span>
-    <button data-feat="scene" aria-pressed="true">全画面シーン</button>
-    <button data-feat="cards">dipsy風カード</button>
-  </div>
-  <div class="seg"><span>ATHLETES</span>
-    <button data-ath="marq" aria-pressed="true">2列の帯</button>
-    <button data-ath="grid">全員グリッド</button>
-    <button data-ath="focus">フォーカス</button>
-  </div>
-  <div class="seg"><span>PLAN</span>
-    <button data-plan="flat" aria-pressed="true">現行</button>
-    <button data-plan="3d">3D:傾き＋視差</button>
-    <button data-plan="holo">3D:ホログラム＋起き上がる</button>
-  </div>
-  <div class="seg"><span>反転演出</span>
-    <button data-inv="off" aria-pressed="true">なし</button>
-    <button data-inv="on">あり</button>
-  </div>
-  <div class="seg"><span>機能エフェクト</span>
-    <button id="fxOn" aria-pressed="true">あり</button>
-    <button id="fxOff">なし</button>
+  <b>UPSTAR LP 全体モック v7 <small>最終版（LP v1.0）· #454 / C-5</small></b>
+  <div class="seg"><span>イントロ</span>
+    <button data-intro="tiles" aria-pressed="true">顔タイル（公開既定）</button>
+    <button data-intro="flash">写真フラッシュ</button>
   </div>
   <div class="seg spacer"><span>幅</span>
     <button id="btnPc" aria-pressed="true">PC</button>
     <button id="btnSp">スマホ 390px</button>
   </div>
-  <div class="seg">
-    <a href="design-players.html">選手一覧モック</a>
-  </div>
+  <div class="seg"><button id="shellHideBtn" title="切替UIを隠す（右上のボタンで再表示）">× 隠す</button></div>
 </div>
+<button class="shellshow" id="shellShowBtn" type="button">切替UI</button>
 
 <div class="phonewrap"><div class="phone"><iframe id="phoneFrame" title="スマホ幅プレビュー"></iframe></div></div>
 
 <div class="preload" id="preload" hidden>
-  <p class="word">Beyond<br>The Sports</p>
-  <div class="line"><span></span></div>
-  <div class="bar"><span>Loading</span><span data-pct>0%</span></div>
+  <div class="pv pv-flash">
+    <div class="fimg" data-fimg></div>
+    <p class="fword" data-fword></p>
+    <img class="flogo" data-flogo src="assets/logo-white.png" alt="UPSTAR">
+  </div>
+  <div class="pv pv-tiles">
+    <div class="tgrid" data-tgrid></div>
+    <img class="tlogo" data-tlogo src="assets/logo-white.png" alt="UPSTAR">
+  </div>
 </div>
 
 <div id="site">
@@ -1290,11 +1119,9 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
   <!-- ============ 1. ヒーロー ============ -->
   <section class="hero" id="top">
     <div class="shot"><img data-hero alt=""></div>
-    <div class="hshots" data-hshots></div>
     <div class="htype"><div class="ht" data-ht>
       <span>Beyond The Sports ·</span><span>Beyond The Sports ·</span></div></div>
     <p class="who" data-heroname></p>
-    <div class="hslide-nav" data-hnav></div>
 
     <!-- myz-studio.com 再現 -->
     <canvas class="hfield" data-hfield></canvas>
@@ -1307,18 +1134,10 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
       <button class="grid" data-hwkgrid><b>Grid</b><i></i></button>
     </div>
 
-    <!-- dipsy のファーストビュー移植（マーキー3段） -->
-    <div class="hmq"><div class="row a" data-hmq="0"></div><div class="row b" data-hmq="1"></div>
-      <div class="row c" data-hmq="2"></div></div>
 
     <!-- UPSTAR独自案: モザイク / 顔の壁 / 3Dの円環 -->
     <canvas class="hmosaic" data-hmosaic></canvas>
     <div class="hwall"><div data-hwall></div><p class="nm" data-wallname></p></div>
-    <div class="hringwrap">
-      <div class="hring" data-hring></div>
-      <div class="vig"></div>
-      <p class="nm" data-ringname></p>
-    </div>
 
     <!-- v-w.co.kr 再現 -->
     <div class="hvw">
@@ -1333,16 +1152,6 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
       <p class="clock"><em>TOKYO, JP</em><b data-clock>--:-- --</b></p>
     </div>
 
-    <!-- v-w.co.kr/work-default 再現 -->
-    <div class="hcv" data-hcv>
-      <div class="plane" data-hcplane></div>
-      <p class="hint">ドラッグして、選手を探す</p>
-      <button class="enter" data-hcenter>
-        <span class="plate"><img class="lg" src="assets/logo-mark-black.png" alt="UPSTAR"></span>
-        <span class="lb"><em>UPSTARをはじめる</em><b></b></span>
-      </button>
-      <button class="entbar" data-hcenter><span>UPSTARをはじめる</span><i>→</i></button>
-    </div>
     <div class="inner wrap">
       <h1><span class="ln"><span>Beyond</span></span><span class="ln"><span>The Sports</span></span></h1>
       <div class="sub">
@@ -1372,49 +1181,6 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
       <span>Beyond The Sports ·</span><span>Beyond The Sports ·</span></div></div>
   </section>
 
-  <!-- ============ 3b. 機能（dipsy風カード案） ============ -->
-  <section class="fcards" id="features-cards"><div class="wrap">
-    <h2 class="rise">Features</h2>
-    <p class="sub rise">機能紹介</p>
-    <div class="grid">
-      <article class="c rise">
-        <div class="shot"><div class="phone"><img src="assets/feature-receive.png" alt="メッセージ受信画面"></div></div>
-        <span class="badge">読む</span>
-        <h3>選手から届く本音を<br>読めるタイムライン</h3>
-        <p>選手から届く本音や想いのメッセージを読めます。<b>初月2通までは無料</b>で受け取れます。</p>
-      </article>
-      <article class="c rise">
-        <div class="shot"><div class="phone"><img src="assets/feature-send.png" alt="メッセージ送信画面"></div></div>
-        <span class="badge">送る</span>
-        <h3>あなたの言葉を<br>選手本人へ直接</h3>
-        <p>あなたの言葉を、選手本人へ直接届けられます。<b>1メッセージにつき3通まで</b>送信できます。</p>
-      </article>
-      <article class="c rise">
-        <div class="shot"><div class="phone"><img src="assets/feature-reaction.png" alt="リアクション画面"></div></div>
-        <span class="badge">返す</span>
-        <h3>ワンタップで<br>気持ちだけを返す</h3>
-        <p>共感の気持ちを、ワンタップでやさしく届けられます。PREMIUMでは<b>無制限</b>に送れます。</p>
-      </article>
-      <article class="c rise">
-        <div class="shot"><div class="phone"><img src="assets/shot-fanletter.png" alt="ファンレター画面"></div></div>
-        <span class="badge">贈る</span>
-        <h3>言葉にして贈る<br>ファンレター</h3>
-        <p>ひとことでは足りない想いを、手紙のかたちで。届いた言葉は選手のもとに残ります。</p>
-      </article>
-      <article class="c rise">
-        <div class="shot"><div class="phone"><img src="assets/shot-live.png" alt="ライブ配信画面"></div></div>
-        <span class="badge">観る</span>
-        <h3>その瞬間に立ち会う<br>ライブ配信</h3>
-        <p>試合の前後、練習のあと。編集されていない時間を、その場で一緒に過ごせます。</p>
-      </article>
-      <article class="c rise">
-        <div class="shot"><div class="phone"><img src="assets/shot-chat.png" alt="チャット画面"></div></div>
-        <span class="badge">話す</span>
-        <h3>1対1で話せる<br>DMチャット</h3>
-        <p>PREMIUMプランでDM機能が解放されます。返信の有無や頻度は選手によって異なります。</p>
-      </article>
-    </div>
-  </div></section>
 
   <!-- ============ 3. 機能 ============ -->
   <div class="feat" id="features">
@@ -1435,8 +1201,12 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
           <h3>ファンレターを、<br>選手本人へ。<span class="tag">NEW</span></h3>
           <p>気持ちをのせた特別なメッセージを、金額を選んで届けられます。選手のタイムラインに、あなたの言葉がそのまま残ります。</p>
         </div>
-        <div class="app bare rise">
-          <div class="scr"><img src="assets/shot-fanletter.png" alt="ファンレターが届いたタイムライン"></div></div>
+        <!-- 2026-09-19 ユーザー提供画像に差し替え（454/assets/ファンレター/01〜03）。
+             01は画面のみのスクショのため、端末はフレームなし(.bare)からフレーム付きに変更 -->
+        <div class="app rise"><span class="notch"></span>
+          <span class="sat sat-a filled"><img src="assets/fanletter-04.png" alt="ファンレターメッセージの拡大（提供画像）"></span>
+          <span class="sat sat-b filled"><img src="assets/fanletter-03.png" alt="ファンレターメッセージの拡大（提供画像）"></span>
+          <div class="scr"><span class="sat sat-scr filled"><img src="assets/fanletter-01.png" alt="ファンレターが届いたチャット画面（提供画像）"></span></div></div>
       </div>
       <p class="who" data-scenename="0"></p>
     </section>
@@ -1451,8 +1221,9 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
           <h3>ライブ配信で、<br>その場に立ち会う。<span class="tag">NEW</span></h3>
           <p>選手のライブ配信をリアルタイムで観て、コメントを送れます。試合の前後も、練習の合間も、同じ時間を共有できます。</p>
         </div>
+        <!-- 2026-09-19: ユーザー提供画像（454/assets/ライブ配信/01）に差し替え -->
         <div class="app rise"><span class="notch"></span>
-          <div class="scr"><img src="assets/shot-live.png" alt="ライブ配信の画面"></div></div>
+          <div class="scr"><img src="assets/livestream-01.png" alt="ライブ配信の画面（提供画像）"></div></div>
       </div>
       <p class="who" data-scenename="1"></p>
     </section>
@@ -1467,8 +1238,9 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
           <h3>本音が届く。<br>気持ちを返せる。</h3>
           <p>選手から届くメッセージを読み、言葉やリアクションで返せます。日々のやりとりが、そのまま応援になります。</p>
         </div>
+        <!-- 2026-09-19: メインはユーザー提供画像（02）。前後のサテライトは「なし」の指示で撤去 -->
         <div class="app rise"><span class="notch"></span>
-          <div class="scr"><img src="assets/shot-chat.png" alt="選手とのチャットルーム"></div></div>
+          <div class="scr"><span class="sat sat-scr filled"><img src="assets/fanletter-02.png" alt="選手とのチャット画面（提供画像）"></span></div></div>
       </div>
       <p class="who" data-scenename="2"></p>
     </section>
@@ -1484,16 +1256,8 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
       <div class="mrow" data-marq="1"><div class="mtrack"></div></div>
       <div class="mrow" data-marq="-1"><div class="mtrack"></div></div>
     </div>
-    <div class="agrid" data-agrid></div>
-    <div class="alist" data-alist></div>
-    <div class="afocus" data-afocus>
-      <div class="main" data-amain>
-        <div class="cap"><p class="name" data-aname></p><p class="club" data-aclub></p></div>
-      </div>
-      <div class="thumbs" data-athumbs></div>
-    </div>
     <div class="wrap" style="text-align:center;margin-top:clamp(36px,6vh,64px)">
-      <a class="btn btn-o rise" href="#">選手一覧を見る</a></div>
+      <a class="btn btn-o rise" href="design-players.html">選手一覧を見る</a></div>
   </section>
 
   <!-- ============ 5. プラン ============ -->
@@ -1596,7 +1360,7 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
         <p class="copy">© Emer inc. All Rights Reserved.</p>
       </div>
       <div class="links">
-        <a href="#top">トップ</a><a href="#athletes">選手一覧</a>
+        <a href="#top">トップ</a><a href="design-players.html">選手一覧</a>
         <a href="https://note.com/upstar/n/n1edb86ac200e" target="_blank" rel="noopener noreferrer">アプリ利用ガイド</a>
         <a href="#faq">FAQ</a><a href="#">お問い合わせ</a>
         <a class="broken" href="#" title="現行LPでは href=&quot;#&quot; のリンク切れ">特商法に関する表記（現行はリンク切れ）</a>
@@ -1617,8 +1381,6 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
 const params = new URLSearchParams(location.search);
 const isFrame = params.get("frame") === "1";
 if (isFrame) document.body.classList.add("is-frame");
-if (params.get("anim")) document.body.className = document.body.className.replace(/anim-\w+/, "anim-" + params.get("anim"));
-if (params.get("fx") === "off") document.body.classList.add("fx-off");
 const BGPARAM = params.get("bg");
 
 const img = (u, w) => u + (u.includes("?") ? "&" : "?") + "w=" + w + "&fm=webp";
@@ -1662,7 +1424,7 @@ function renderHeadline(mode){
     inner.style.transform = "none";  /* 行単位の移動はやめ、文字単位に任せる */
   });
 }
-renderHeadline(params.get("hero") || "photo");
+renderHeadline("wall");
 
 /* 写真モード */
 {
@@ -1673,29 +1435,6 @@ renderHeadline(params.get("hero") || "photo");
   document.querySelector(".hero").style.setProperty("--heroimg", 'url("' + img(HEROMAIN.u, 1600) + '")');
 }
 
-/* 写真ワイプモード: 4枚をクリップパスで順に開く */
-{
-  const wrap = document.querySelector("[data-hshots]");
-  const nav  = document.querySelector("[data-hnav]");
-  if (wrap && HEROPOOL.length) {
-    wrap.innerHTML = HEROPOOL.map((p, i) =>
-      '<figure' + (i === 0 ? ' class="on"' : "") + '><img src="' + img(p.u, 2000) + '" alt="' + p.n + '"></figure>'
-    ).join("");
-    nav.innerHTML = HEROPOOL.map((_, i) => '<i' + (i === 0 ? ' class="on"' : "") + "></i>").join("");
-    const figs = [...wrap.children], dots = [...nav.children];
-    let idx = 0;
-    setInterval(() => {
-      if (!document.body.classList.contains("hero-slide")) return;
-      if (document.body.classList.contains("anim-low")) return;
-      idx = (idx + 1) % figs.length;
-      figs.forEach((f, i) => f.classList.toggle("on", i <= idx));
-      if (idx === 0) figs.forEach((f, i) => f.classList.toggle("on", i === 0));
-      dots.forEach((d, i) => d.classList.toggle("on", i === idx));
-      const p = HEROPOOL[idx];
-      document.querySelector("[data-heroname]").textContent = label(p);
-    }, 3800);
-  }
-}
 
 /* ==========================================================================
    参考サイト再現モード（field / vw / canvas）
@@ -1987,6 +1726,15 @@ const WALL = (() => {
     if (best >= 0 && best !== last && bestD < R) {
       last = best; nm.textContent = label(cells[best].p);
     }
+    /* v7修正: 名前チップは左下固定をやめてカーソルの右上に追従させる。
+       壁の外へ出たら消す（見出しを重ねたときに文字と重ならないように） */
+    if (mx < 0 || my < 0 || mx > W || my > H) {
+      if (nm.textContent) { nm.textContent = ""; last = -1; }
+    } else {
+      /* 右端付近ではチップ（最大240px程度）が画面外へ出るため左に寄せて留める */
+      nm.style.left = Math.min(W - 250, Math.max(20, mx)) + "px";
+      nm.style.top = Math.max(96, my - 10) + "px";
+    }
     raf = requestAnimationFrame(frame);
   }
   window.addEventListener("pointermove", e => {
@@ -2000,306 +1748,7 @@ const WALL = (() => {
   };
 })();
 
-/* ---- ring: 選手写真を3Dの円柱に並べて回す ----
-   参考サイト群はいずれも「平面」を動かしている。奥行きを使うと別物になる。
-   カーソルの左右で回転速度、上下で見上げる角度が変わる。 */
-const RING = (() => {
-  const wrap = document.querySelector(".hringwrap");
-  const host = document.querySelector("[data-hring]");
-  const nm = document.querySelector("[data-ringname]");
-  /* R = カード幅+余白 / (2 * tan(180/N))。円周にちょうど N 枚が並ぶ半径 */
-  const N = 20, STEP = 360 / N, R = 700;
-  /* 自動回転はやめ、カーソル／指の位置と動きにそのまま連動させる。
-     ・ポインタの横位置 = 回転角（画面端から端で ±SWEEP/2 度）
-     ・ドラッグ／スワイプ = そのぶん回転を足す（タッチはこちらが主） */
-  /* IDLE_SPD は 1フレームあたりの度数。.12 = 約7度/秒（1周およそ50秒） */
-  const SWEEP = 170, DRAG = .28, IDLE_MS = 900, IDLE_SPD = .12;
-  let cards = [], ry = 0, base = 0, tilt = 0, ttilt = 0, nx = 0;
-  let lastMove = -1e9, raf = 0, built = false, last = -1;
 
-  function build(){
-    const pool = (HIRES.length >= N ? HIRES : PLAYERS);
-    host.innerHTML = Array.from({ length: N }, (_, i) => {
-      const p = pool[i % pool.length];
-      return '<div class="cd" style="transform:rotateY(' + (i * STEP) + 'deg) translateZ(' + R + 'px)">' +
-        '<img src="' + img(p.u, 480) + '" alt="' + p.n + '"></div>';
-    }).join("");
-    cards = [...host.children].map((el, i) => ({ el, a: i * STEP, p: pool[i % pool.length] }));
-    built = true;
-  }
-  function frame(){
-    /* 指もカーソルも動いていない間はゆっくり自動で回す。
-       動かし始めたらその位置へ追従する（base に足しているので回転は途切れない） */
-    if (performance.now() - lastMove > IDLE_MS) base -= IDLE_SPD;
-    tilt += (ttilt - tilt) * .08;
-    ry += ((base - nx * SWEEP) - ry) * .09;     /* 指／カーソルの位置へ追従する */
-    /* 円環ごと奥へ下げないと、手前のカードが遠近で巨大になり円柱に見えない */
-    host.style.transform = "translateZ(" + (-R) + "px) rotateX(" + tilt.toFixed(2) +
-      "deg) rotateY(" + ry.toFixed(2) + "deg)";
-    /* 手前を向いているカードほど明るく。奥のカードは沈めて奥行きを出す */
-    let front = 0, best = -2;
-    cards.forEach((c, i) => {
-      const rad = (c.a + ry) * Math.PI / 180;
-      const f = Math.cos(rad);                    /* 1 = 手前 */
-      c.el.style.opacity = (.12 + Math.max(0, f) * .88).toFixed(3);
-      if (f > best) { best = f; front = i; }
-    });
-    if (front !== last) { last = front; nm.textContent = label(cards[front].p); }
-    raf = requestAnimationFrame(frame);
-  }
-  let down = false, lx = 0;
-  window.addEventListener("pointermove", e => {
-    const r = wrap.getBoundingClientRect();
-    if (!r.width) return;
-    if (down) { base += (e.clientX - lx) * DRAG; lx = e.clientX; }
-    nx = (e.clientX - r.left) / r.width - .5;             /* -0.5 .. 0.5 → 横位置が回転角 */
-    ttilt = -((e.clientY - r.top) / r.height - .5) * 14;  /* 縦位置が見上げ角 */
-    lastMove = performance.now();
-  }, { passive: true });
-  /* ヒーローから離れたら中央の向きに戻し、自動回転に任せる */
-  wrap.addEventListener("pointerleave", () => { nx = 0; ttilt = 0; lastMove = -1e9; });
-  /* タッチはホバーが無いので、スワイプで回せるようにする */
-  wrap.addEventListener("pointerdown", e => {
-    down = true; lx = e.clientX;
-    wrap.setPointerCapture(e.pointerId);
-  });
-  const up = () => { down = false; };
-  wrap.addEventListener("pointerup", up);
-  wrap.addEventListener("pointercancel", up);
-
-  return {
-    start(){
-      if (raf) return;
-      if (!built) build();
-      raf = requestAnimationFrame(frame);
-    },
-    stop(){ if (raf > 0) cancelAnimationFrame(raf); raf = 0; }
-  };
-})();
-
-/* ---- mq: dipsy（creator.dipsy.com/apply）のファーストビューを再現 ----
-
-   参考サイトの実装（_next/static/chunks/0gppgb45.9ulf.js の LpEffects）を読み、
-   数値と挙動をそのまま持ってきている。CSSアニメーションではなくrAFで回す。
-
-   ・3段。向きは [-1,+1,-1]、基準速度は 幅の半分 / [55,66,58] * 向き（px/秒）
-   ・画面幅を超えるまでセルを複製（上限96個）してから、半分ぶんで折り返す
-   ・スクロールすると勢いが乗る（p を ±900 で頭打ち、毎秒 0.9^60 で減衰）
-   ・マウスを横に動かすだけでも速度が増す（p に 0.055 * 速度、±260 で頭打ち）
-   ・ドラッグで直接送れる。離すと投げた勢いが残る
-   ・速度に応じて帯が skewX で傾き、速すぎるとモーションブラーがかかる
-   ・カーソルの軌跡（最大14点）が波紋になり、近いセルをばね運動で押しのける
-   ・カーソルの真下のセルは 1.16 倍に浮き上がる
-   ・無操作でもセルごとに微妙に呼吸する（テキストのセルは除く）
-   ・出現はセルごとに 0〜0.7 秒の遅延（--ed）、全体は0.9秒のイーズアウト
-*/
-const HMQ = (() => {
-  const wrap = document.querySelector(".hmq");
-  const rows = [...document.querySelectorAll("[data-hmq]")];
-  const DIRS = [-1, 1, -1], DIV = [55, 66, 58], PAR = [.7, 1.8, 1.1];
-  let R = [], raf = 0, built = false, launched = 0;
-
-  /* 折り返し。参考サイトと同じ式 */
-  const wrapX = (x, half) => -(((-x % half) + half) % half);
-
-  function build(){
-    const pool = PLAYERS.filter(p => (p.w || 0) >= 600);
-    const src = pool.length >= 21 ? pool : PLAYERS;
-    rows.forEach((row, r) => {
-      const items = [];
-      for (let i = 0; i < 9; i++) {
-        if (i === 3) items.push('<div class="tl txt">BEYOND<br>THE<br>SPORTS</div>');
-        else if (i === 6 && r === 1) items.push('<div class="tl icon"><img src="assets/logo-white.png" alt="UPSTAR"></div>');
-        else {
-          const p = src[(r * 9 + i) % src.length];
-          items.push('<div class="tl"><img src="' + img(p.u, 420) + '" alt="' + p.n + '"></div>');
-        }
-      }
-      row.innerHTML = items.join("") + items.join("");
-    });
-    /* 画面幅を満たすまで複製する（参考サイトと同じ条件） */
-    const need = Math.max(innerWidth, screen.width || 0);
-    rows.forEach(row => {
-      while (row.scrollWidth / 2 < need && row.children.length < 96)
-        [...row.children].forEach(c => row.appendChild(c.cloneNode(true)));
-    });
-    R = rows.map((el, i) => ({
-      el, x: 0, half: 1, base: 0, dir: DIRS[i], sv: 0, bq: -1,
-      cells: [...el.children].map(c => ({
-        el: c, cx: 0, w: 0, s: 1, wx: 0, wy: 0, wr: 0, ax: 0, ay: 0, ar: 0,
-        bf: 2 * Math.PI / (3.8 + 2.7 * Math.random()),
-        bp: Math.random() * Math.PI * 2,
-        ba: .01 + .008 * Math.random(),
-        wk: !c.classList.contains("txt")          /* テキストのセルは揺らさない */
-      }))
-    }));
-    R.forEach(r => r.cells.forEach(c =>
-      c.el.style.setProperty("--ed", (.7 * Math.random()).toFixed(2) + "s")));
-    measure();
-    /* UPSTARのロゴのセルが最初から必ず画面に入るよう、その段だけ位置をずらす。
-       参考サイトも同じことをしていて（アプリアイコンのセルを画面中央に合わせる）、
-       そのセルは遅延なしで出している。 */
-    {
-      const mid = wrap.clientWidth / 2;
-      R.forEach(r => {
-        const icons = r.cells.filter(c => c.el.classList.contains("icon"));
-        if (!icons.length) return;
-        let best = icons[0];
-        icons.forEach(c => {
-          if (Math.abs(wrapX(mid - c.cx, r.half) + c.cx - mid) <
-              Math.abs(wrapX(mid - best.cx, r.half) + best.cx - mid)) best = c;
-        });
-        r.x = wrapX(mid - best.cx, r.half);
-        best.el.style.setProperty("--ed", "0s");
-      });
-    }
-    built = true;
-  }
-  function measure(){
-    R.forEach((r, i) => {
-      r.half = r.el.scrollWidth / 2;
-      r.base = r.half / DIV[i] * r.dir;
-      r.cells.forEach(c => {
-        c.cx = c.el.offsetLeft + c.el.offsetWidth / 2;
-        c.w = c.el.offsetWidth;
-      });
-    });
-  }
-  addEventListener("resize", () => { if (built) measure(); });
-
-  /* ---- 入力 ---- */
-  let boost = 0, trail = [], last = null;
-  let lastY = scrollY, lastT = performance.now();
-  addEventListener("scroll", () => {
-    const now = performance.now(), dy = scrollY - lastY, dt = Math.max(16, now - lastT);
-    lastY = scrollY; lastT = now;
-    boost = Math.max(-900, Math.min(900, boost + dy / dt * 100));
-  }, { passive: true });
-
-  let px = -9999, py = -9999, hover = false, drag = false;
-  let lx = 0, lt = 0, vel = 0, dragDx = 0, para = 0;
-  wrap.addEventListener("pointerenter", () => { hover = true; });
-  wrap.addEventListener("pointerleave", () => { hover = false; px = py = -9999; last = null; });
-  wrap.addEventListener("pointermove", e => {
-    const now = performance.now();
-    if (drag) {
-      const dx = e.clientX - lx;
-      R.forEach(r => { r.x += -(dx * r.dir); });
-      dragDx += dx;
-      vel = dx / Math.max(now - lt, 1) * 1000;
-    } else if (e.pointerType === "mouse") {
-      const v = (e.clientX - lx) / Math.max(now - lt, 1) * 1000;
-      boost = Math.max(-260, Math.min(260, boost + .055 * v));
-    }
-    if (e.pointerType === "mouse") {
-      px = e.clientX; py = e.clientY;
-      if (last) {
-        let tx = e.clientX - last.x, ty = e.clientY - last.y;
-        const d = Math.hypot(tx, ty);
-        if (d > 30) { tx *= 30 / d; ty *= 30 / d; }
-        trail.push({ x: e.clientX, y: e.clientY, vx: tx, vy: ty, life: 1 });
-        if (trail.length > 14) trail.shift();
-      }
-      last = { x: e.clientX, y: e.clientY };
-    }
-    lx = e.clientX; lt = now;
-  });
-  wrap.addEventListener("pointerdown", e => {
-    drag = true; vel = 0; lx = e.clientX; lt = performance.now();
-    wrap.classList.add("dragging"); wrap.setPointerCapture(e.pointerId);
-  });
-  ["pointerup", "pointercancel"].forEach(t => wrap.addEventListener(t, () => {
-    if (!drag) return;
-    drag = false; wrap.classList.remove("dragging");
-    boost = Math.max(-900, Math.min(900, -vel));   /* 投げた勢いを残す */
-  }));
-
-  /* ---- 毎フレーム ---- */
-  let prev = performance.now();
-  function frame(now){
-    const dt = Math.min((now - prev) / 1000, .05);
-    prev = now;
-    boost *= Math.pow(.9, 60 * dt);
-    para += (0 - para) * Math.min(1, 4 * dt);
-    const ease = launched ? 1 - Math.pow(1 - Math.min(1, (now - launched) / 900), 3) : 1;
-
-    const ry = Math.round(.12 * para * 10) / 10;
-    wrap.style.transform = ry ? "perspective(1000px) rotateY(" + ry + "deg)" : "";
-    trail.forEach(t => { t.life *= .93; });
-    while (trail.length && trail[0].life < .02) trail.shift();
-
-    R.forEach((r, i) => {
-      let d;
-      if (drag) d = -(dragDx * r.dir);
-      else { d = (r.base * ease + -(boost * r.dir) * ease) * dt; r.x += d; }
-      r.x = wrapX(r.x, r.half);
-      const v = d / Math.max(dt, .001);
-      r.sv += (v - r.sv) * .18;
-      const skew = Math.max(-8, Math.min(8, -(.004 * r.sv)));
-      const ox = wrapX(r.x + para * PAR[i], r.half);
-      r.el.style.transform = "translate3d(" + ox.toFixed(2) + "px,0,0) skewX(" + skew.toFixed(2) + "deg)";
-      /* 速すぎるときだけモーションブラー。値が変わったときだけ書く */
-      const bl = Math.round(10 * Math.max(0, Math.min(2.2, (Math.abs(r.sv) - 350) / 500))) / 10;
-      if (bl !== r.bq) { r.el.style.filter = bl > 0 ? "blur(" + bl + "px)" : ""; r.bq = bl; }
-
-      const box = r.el.parentElement.getBoundingClientRect();
-      const inBand = hover && !drag && py > box.top - 30 && py < box.bottom + 30;
-      const top = box.top + r.el.offsetTop;
-      r.cells.forEach(c => {
-        let cx = box.left + ox + c.cx;
-        if (cx < box.left - c.w) cx += r.half;
-        let target = 1;
-        if (inBand && Math.abs(px - cx) < c.w / 2) target = 1.16;
-        c.s += (target - c.s) * .18;
-
-        let fx = 0, fy = 0;
-        if (c.wk && trail.length) {
-          const cy = top + c.w / 2, n = (.78 * c.w) * (.78 * c.w);
-          for (const t of trail) {
-            const dx = cx - t.x, dy = cy - t.y;
-            const g = Math.exp(-(dx * dx + dy * dy) / n);
-            fx += t.vx * t.life * g; fy += t.vy * t.life * g;
-          }
-        }
-        const tx = Math.max(-6, Math.min(6, .1 * fx));
-        const ty = Math.max(-7, Math.min(7, .14 * fy));
-        const tr = Math.max(-2.4, Math.min(2.4, .035 * fx));
-        c.ax += (tx - c.wx) * .085; c.ax *= .86; c.wx += c.ax;
-        c.ay += (ty - c.wy) * .085; c.ay *= .86; c.wy += c.ay;
-        c.ar += (tr - c.wr) * .08;  c.ar *= .87; c.wr += c.ar;
-
-        let breathe = 1;
-        if (c.wk) breathe = 1 + c.ba * Math.sin(.001 * now * c.bf + c.bp);
-        const sc = c.s * breathe;
-        const moved = Math.abs(c.wx) + Math.abs(c.wy) + Math.abs(c.wr) > .02;
-        if (Math.abs(sc - 1) > .002 || moved) {
-          c.el.style.transform = "translate(" + c.wx.toFixed(2) + "px," + c.wy.toFixed(2) +
-            "px) rotate(" + c.wr.toFixed(2) + "deg) scale(" + sc.toFixed(3) +
-            ") translateY(" + (-(26 * (c.s - 1))).toFixed(1) + "px)";
-          c.el.style.zIndex = c.s > 1.02 ? 2 : "";
-        } else if (c.el.style.transform) {
-          c.el.style.transform = ""; c.el.style.zIndex = "";
-        }
-      });
-    });
-    dragDx = 0;
-    raf = requestAnimationFrame(frame);
-  }
-
-  return {
-    start(){
-      if (raf) return;
-      if (!built) build();
-      if (!launched) {
-        launched = performance.now();
-        requestAnimationFrame(() => wrap.classList.add("go"));
-      }
-      prev = performance.now();
-      raf = requestAnimationFrame(frame);
-    },
-    stop(){ if (raf) cancelAnimationFrame(raf); raf = 0; }
-  };
-})();
 
 /* ---- PLAN 3Dカード ----
    JS は --rx/--ry（傾き）と --mx/--my（グレア位置）を書くだけ。
@@ -2420,115 +1869,111 @@ const HMQ = (() => {
   tick(); setInterval(tick, 10000);
 }
 
-/* ---- canvas: v-w.co.kr/work-default ----
-   実測値: 画像は 3:4 の2サイズ（380x507 / 500x667）。
-   ページ自体はスクロールせず、面をスクロール／ドラッグで無限にパンする。 */
-const HCV = (() => {
-  const wrap = document.querySelector("[data-hcv]");
-  const plane = document.querySelector("[data-hcplane]");
-  const btn = document.querySelector("[data-hcenter]");
-  /* セル 620x740 の粗い格子にセル内でずらして置き、いくつか間引く。
-     参考サイトは重なりが無く余白が大きいので、重ならない配置にしている。 */
-  /* PCで一度に10人ほど見えるようにする、という指示に合わせた縮尺。
-     実測値（380x507 / 500x667）を S 倍。1512x806 のとき9〜10枚が入る。
-     タイルが画面より小さいと同じ写真が横に並んで見えるので、
-     マスの数を 6x4 に増やしてタイルを画面より大きく保っている。 */
-  /* スマホ幅では写真が大きすぎるので、さらに縮める（PCは .46 のまま） */
-  const S = innerWidth < 560 ? .28 : .46;
-  const COLS = 6, ROWS = 4, CW = Math.round(620 * S), CH = Math.round(740 * S);
-  const TW = COLS * CW, TH = ROWS * CH;
-  const SKIP = new Set([3, 7, 10, 14, 19, 21]);
-  const pool = (HIRES.length >= 8 ? HIRES : PLAYERS);
-  let px = 0, py = 0, built = false;
-  const mod = (a, n) => ((a % n) + n) % n;
-  /* 乱数は使わない。読み込むたびに配置が変わると比較にならないため */
-  const hash = (n, k) => { const v = Math.sin(n * k) * 43758.5453; return v - Math.floor(v); };
 
-  const spots = [];
-  for (let i = 0; i < COLS * ROWS; i++) {
-    if (SKIP.has(i)) continue;
-    const big = i % 4 === 0;
-    const w = Math.round((big ? 500 : 380) * S), h = Math.round((big ? 667 : 507) * S);
-    spots.push({
-      x: (i % COLS) * CW + hash(i + 1, 12.9898) * (CW - w),
-      y: Math.floor(i / COLS) * CH + hash(i + 1, 78.233) * (CH - h),
-      w, h, p: pool[spots.length % pool.length]
-    });
-  }
-  function build(){
-    const out = [];
-    for (let oy = -1; oy <= 1; oy++) for (let ox = -1; ox <= 1; ox++) {
-      spots.forEach(s => {
-        out.push('<div class="it" style="left:' + Math.round(s.x + ox * TW) + "px;top:" +
-          Math.round(s.y + oy * TH) + "px;width:" + s.w + "px;height:" + s.h + 'px">' +
-          '<img src="' + img(s.p.u, 520) + '" alt="' + s.p.n + '"></div>');
-      });
-    }
-    plane.innerHTML = out.join("");
-  }
-  function apply(){
-    plane.style.transform = "translate3d(" + (mod(px, TW) - TW) + "px," + (mod(py, TH) - TH) + "px,0)";
-  }
-  wrap.addEventListener("wheel", e => {
-    e.preventDefault(); px -= e.deltaX; py -= e.deltaY; apply();
-  }, { passive: false });
-  let down = false, lx = 0, ly = 0;
-  wrap.addEventListener("pointerdown", e => {
-    if (e.target.closest(".enter")) return;
-    down = true; lx = e.clientX; ly = e.clientY;
-    wrap.classList.add("drag"); wrap.setPointerCapture(e.pointerId);
-  });
-  wrap.addEventListener("pointermove", e => {
-    if (!down) return;
-    px += e.clientX - lx; py += e.clientY - ly; lx = e.clientX; ly = e.clientY; apply();
-  });
-  const up = () => { down = false; wrap.classList.remove("drag"); };
-  wrap.addEventListener("pointerup", up); wrap.addEventListener("pointercancel", up);
-  /* ENTER を押すと面が奥へ引きながら白へ溶け、そのまま本編（写真ヒーロー）へ入る。
-     プリローダーの代わりに、この面そのものを入口として使う想定。 */
-  btn.addEventListener("click", () => {
-    if (wrap.classList.contains("exit")) return;
-    wrap.classList.add("exit");
-    plane.style.transform += " scale(1.35)";
-    const hero = document.querySelector(".hero");
-    setTimeout(() => {
-      document.body.className = document.body.className.replace(/hero-\w+/, "").trim() + " hero-photo";
-      document.querySelectorAll("[data-hero-mode]").forEach(x =>
-        x.setAttribute("aria-pressed", String(x.dataset.heroMode === "photo")));
-      renderHeadline("photo");
-      wrap.classList.remove("exit");
-      plane.style.transform = "";
-      px = py = 0; apply();
-      hero.classList.remove("on");
-      requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add("on")));
-    }, 1150);
-  });
+/* ==========================================================================
+   v7: イントロ2案（現行カウンター/タイポ×カーテンは9/19指示で削除）。
+   選ぶと即プレビュー（再演は同じ案を再クリック）。
+   ・flash 写真×言葉の高速モンタージュ → ロゴで締める（キネティックタイポ型）
+   ・tiles 選手の顔タイルが敷き詰まり、ロゴを見せて散開（グリッドリビール型・独自案）
+   introToken で多重再生を打ち切る（連打・切替時に古いタイマーを無効化）
+   ========================================================================== */
+/* 公開時の既定イントロは「顔タイル」（2026-09-19指示）。写真フラッシュは検討中の対抗案 */
+let INTRO = params.get("intro") === "flash" ? "flash" : "tiles";
+/* スマホ版プレビュー（iframe）内でも再生できるよう、&play=1 が付いていたら
+   読み込み直後に選択中のイントロを1回再生する（9/19指示） */
+if (params.get("play") === "1")
+  addEventListener("load", () => requestAnimationFrame(() => playIntro()));
+let introToken = 0;
+const PREL = document.getElementById("preload");
+function preOpen(v){
+  introToken++;
+  PREL.hidden = false;
+  PREL.className = "preload v-" + v;
+  document.querySelector(".hero").classList.remove("on");
+  return introToken;
+}
+function preClose(t){
+  if (t !== introToken) return;
+  PREL.classList.add("done");
+  requestAnimationFrame(() => document.querySelector(".hero").classList.add("on"));
+  setTimeout(() => { if (t === introToken) PREL.hidden = true; }, 700);
+}
 
-  return { start(){ if (!built) { built = true; build(); apply(); } } };
-})();
-
-/* プリローダー（ystudio の 0→100%）。イントロ再生ボタンで何度でも見られる */
-function playIntro(){
-  const pre = document.getElementById("preload");
-  const pct = pre.querySelector("[data-pct]");
-  const bar = pre.querySelector(".line span");
-  const hero = document.querySelector(".hero");
-  pre.hidden = false; pre.classList.remove("done");
-  hero.classList.remove("on");
-  let n = 0;
+/* --- flash --- */
+const FLASHPOOL = (HIRES.length >= 8 ? HIRES : PLAYERS).slice(0, 8);
+/* コピーは既存ヒーローの「勝った日も、うまくいかない日も、〜」を3節に分けたもの */
+const FLASHSEQ = [
+  { w: "勝った日も。", d: 560 },
+  { i: 0, d: 130 }, { i: 1, d: 130 }, { i: 2, d: 130 },
+  { w: "うまくいかない日も。", d: 640 },
+  { i: 3, d: 130 }, { i: 4, d: 130 }, { i: 5, d: 130 },
+  { w: "選手の人生を、応援できる場所。", d: 780 },
+  { i: 6, d: 120 }, { i: 7, d: 120 },
+];
+function playFlash(){
+  const t = preOpen("flash");
+  const im = PREL.querySelector("[data-fimg]");
+  const wd = PREL.querySelector("[data-fword]");
+  const lg = PREL.querySelector("[data-flogo]");
+  lg.classList.remove("on"); wd.style.opacity = 0; im.style.opacity = 0;
+  /* フラッシュ中の白抜けを防ぐため先読みしておく */
+  FLASHPOOL.forEach(p => { const pi = new Image(); pi.src = img(p.u, 1200); });
+  let k = 0;
   const step = () => {
-    n = Math.min(100, n + Math.max(.55, (100 - n) / 26));
-    pct.textContent = Math.round(n) + "%";
-    bar.style.width = n + "%";
-    if (n < 99.5) return requestAnimationFrame(step);
-    pct.textContent = "100%";
-    setTimeout(() => {
-      pre.classList.add("done");
-      requestAnimationFrame(() => hero.classList.add("on"));
-      setTimeout(() => { pre.hidden = true; }, 700);
-    }, 320);
+    if (t !== introToken) return;
+    if (k >= FLASHSEQ.length) {
+      im.style.opacity = 0; wd.style.opacity = 0;
+      lg.classList.add("on");
+      setTimeout(() => preClose(t), 1150);
+      return;
+    }
+    const f = FLASHSEQ[k++];
+    if (f.w !== undefined) {
+      im.style.opacity = 0; wd.textContent = f.w; wd.style.opacity = 1;
+    } else {
+      wd.style.opacity = 0;
+      im.style.backgroundImage = 'url("' + img(FLASHPOOL[f.i % FLASHPOOL.length].u, 1200) + '")';
+      im.style.opacity = 1;
+    }
+    setTimeout(step, f.d);
   };
-  step();
+  setTimeout(step, 260);
+}
+
+/* --- tiles --- */
+function playTiles(){
+  const t = preOpen("tiles");
+  const grid = PREL.querySelector("[data-tgrid]");
+  const lg = PREL.querySelector("[data-tlogo]");
+  const box = PREL.querySelector(".pv-tiles");
+  box.classList.remove("in", "out"); lg.classList.remove("on");
+  const SIZE = 110, GAP = 4, W2 = innerWidth, H2 = innerHeight;
+  const cols = Math.ceil(W2 / (SIZE + GAP)), rows = Math.ceil(H2 / (SIZE + GAP));
+  const out = [];
+  for (let j = 0; j < rows; j++) for (let i2 = 0; i2 < cols; i2++) {
+    const p = PLAYERS[(j * cols + i2) % PLAYERS.length];
+    /* 散開の向き＝画面中央からの放射方向。中央のタイルは真上へ逃がす */
+    const cx = i2 * (SIZE + GAP) + SIZE / 2 - W2 / 2;
+    const cy = j * (SIZE + GAP) + SIZE / 2 - H2 / 2;
+    const m = Math.hypot(cx, cy) || 1;
+    out.push('<i style="left:' + i2 * (SIZE + GAP) + "px;top:" + j * (SIZE + GAP) +
+      "px;width:" + SIZE + "px;height:" + SIZE + "px;--d:" + (Math.random() * .55).toFixed(2) + "s;" +
+      "--ox:" + Math.round(cx / m * (240 + Math.random() * 260)) + "px;" +
+      "--oy:" + Math.round((m < 2 ? -1 : cy / m) * (240 + Math.random() * 260)) + 'px">' +
+      '<img src="' + img(p.u, 220) + '" alt=""></i>');
+  }
+  grid.innerHTML = out.join("");
+  requestAnimationFrame(() => requestAnimationFrame(() => box.classList.add("in")));
+  setTimeout(() => { if (t === introToken) lg.classList.add("on"); }, 1150);
+  setTimeout(() => {
+    if (t !== introToken) return;
+    box.classList.add("out"); lg.classList.remove("on");
+  }, 2250);
+  setTimeout(() => preClose(t), 2650);
+}
+
+function playIntro(){
+  ({ flash: playFlash, tiles: playTiles }[INTRO] || playTiles)();
 }
 /* 機能セクションの背景。横長の高解像度を優先（全画面で使うため） */
 {
@@ -2554,70 +1999,6 @@ function playIntro(){
   });
 }
 
-/* ---------- ATHLETES の見せ方（帯以外の3案） ----------
-   画像の枚数が多いので、選ばれたときに初めて組み立てる。 */
-const ATH = (() => {
-  const built = {};
-  const cl = p => (p.c && p.c !== "-" ? p.c : "");
-
-  function grid(){
-    const host = document.querySelector("[data-agrid]");
-    host.innerHTML = PLAYERS.map(p =>
-      '<a href="#"><img src="' + img(p.u, 380) + '" alt="' + p.n + '">' +
-      '<div class="cap"><p class="name">' + p.n + '</p>' +
-      '<p class="club">' + cl(p) + "</p></div></a>").join("");
-  }
-  function list(){
-    const host = document.querySelector("[data-alist]");
-    host.innerHTML = PLAYERS.map(p =>
-      '<a href="#"><span class="av"><img src="' + img(p.u, 160) + '" alt="' + p.n + '"></span>' +
-      '<span><span class="nm">' + p.n + '</span>' +
-      '<span class="cl" style="display:block">' + cl(p) + "</span></span></a>").join("");
-  }
-  function focus(){
-    const main = document.querySelector("[data-amain]");
-    const thumbs = document.querySelector("[data-athumbs]");
-    const nameEl = document.querySelector("[data-aname]");
-    const clubEl = document.querySelector("[data-aclub]");
-    /* 主役の画像は2枚だけ用意して交互に差し替える（58枚を先読みしないため） */
-    const a = document.createElement("img"), b = document.createElement("img");
-    main.prepend(a, b);
-    let front = a, back = b;
-    thumbs.innerHTML = PLAYERS.map((p, i) =>
-      '<button type="button" data-i="' + i + '"' + (i === 0 ? ' class="on"' : "") +
-      '><img src="' + img(p.u, 200) + '" alt="' + p.n + '"></button>').join("");
-    const show = i => {
-      const p = PLAYERS[i];
-      back.src = img(p.u, 1000);
-      back.alt = p.n;
-      back.onload = () => {
-        back.classList.add("on"); front.classList.remove("on");
-        const t = front; front = back; back = t;
-      };
-      nameEl.textContent = p.n;
-      clubEl.textContent = cl(p);
-      thumbs.querySelectorAll("button").forEach((x, n) => x.classList.toggle("on", n === i));
-    };
-    let hoverTimer = 0;
-    thumbs.addEventListener("pointerover", e => {
-      const b2 = e.target.closest("button"); if (!b2) return;
-      clearTimeout(hoverTimer);
-      hoverTimer = setTimeout(() => show(+b2.dataset.i), 90);
-    });
-    thumbs.addEventListener("click", e => {
-      const b2 = e.target.closest("button"); if (b2) show(+b2.dataset.i);
-    });
-    show(0);
-  }
-
-  return {
-    show(mode){
-      if (mode === "grid" && !built.grid) { grid(); built.grid = 1; }
-      if (mode === "list" && !built.list) { list(); built.list = 1; }
-      if (mode === "focus" && !built.focus) { focus(); built.focus = 1; }
-    }
-  };
-})();
 
 /* ---------- 機能セクションの背景バリエーション ----------
    選手写真以外も見たいという要望への対応。
@@ -2634,56 +2015,22 @@ document.querySelectorAll(".fscene").forEach(sec => {
 });
 /* v6: 機能背景は「タイポなし」に一本化（選手写真/黒＋タイポ/グラデ/画面ぼかしはv5で不採用） */
 document.body.classList.add("bg-" + (BGPARAM || "plain"));
-document.body.classList.add("hero-" + (params.get("hero") || "photo"));
-if (params.get("copy") === "1") document.body.classList.add("show-copy");
-document.body.classList.add("ent-" + (params.get("ent") || "line"));
-document.body.classList.add("feat-" + (params.get("feat") || "scene"));
-document.body.classList.add("plan-" + (params.get("plan") || "flat"));
-document.body.classList.add("ath-" + (params.get("ath") || "marq"));
+/* ヒーローは「独自:顔の壁 × 見出しを重ねる」で確定（2026-09-19） */
+document.body.classList.add("hero-wall", "show-copy");
+/* 機能の入場アニメは「交差スライド」で確定（2026-09-19） */
+document.body.classList.add("fanm-slide");
+document.body.classList.add("fxv-big");
+/* PLAN は「3D:ホログラム＋起き上がる」で確定（2026-09-19） */
+document.body.classList.add("plan-holo");
 /* v6: ガイドは白背景（guide-light は未定義クラス＝素の .guide{background:var(--bg)} が効く）。
    直上に黒のMOVIEを挟んだため、白でもPLANと地続きには見えない */
 document.body.classList.add("guide-" + (params.get("guide") || "light"));
-document.body.classList.add("hdr-" + (params.get("hdr") || "pill"));
-ATH.show(params.get("ath") || "marq");
-if (params.get("invfx") === "on") document.body.classList.add("invfx");
 
-/* 反転演出: ステートメントが画面の下半分に入ったらページを白へ反転させる。
-   dipsy は白→黒。v5は黒基調なので向きを逆にしている。 */
-{
-  const stmt = document.querySelector(".stmt");
-  /* 全画面シーンと、その前の見出しも同じ判定で反転させる */
-  const zones = [...document.querySelectorAll(".feathead,.fscene")];
-  const sync = () => {
-    if (!document.body.classList.contains("invfx")) {
-      document.body.classList.remove("inverted");
-      zones.forEach(z => z.classList.remove("inv"));
-      return;
-    }
-    const h = innerHeight;
-    const hit = el => {
-      const r = el.getBoundingClientRect();
-      return r.top < h * .72 && r.bottom > h * .28;
-    };
-    document.body.classList.toggle("inverted", hit(stmt));
-    zones.forEach(z => z.classList.toggle("inv", hit(z)));
-  };
-  addEventListener("scroll", sync, { passive: true });
-  addEventListener("resize", sync);
-  window.syncInvert = sync;
-  sync();
-}
 
 /* 参考サイト再現モードは重いので、そのモードのときだけ動かす */
-function syncHeroMode(m){
-  if (m === "field") FIELD.start(); else FIELD.stop();
-  if (m === "mq") HMQ.start(); else HMQ.stop();
-  if (m === "mosaic") MOSAIC.start(); else MOSAIC.stop();
-  if (m === "wall") WALL.start(); else WALL.stop();
-  if (m === "ring") RING.start(); else RING.stop();
-  if (m === "canvas") HCV.start();
-  if (m === "work") HWORK.start();
-}
-syncHeroMode(params.get("hero") || "photo");
+/* ヒーローは「独自:顔の壁 × 見出しを重ねる」で確定（2026-09-19） */
+function syncHeroMode(){ WALL.start(); }
+syncHeroMode();
 
 /* ---------- 動画（v-w.co.kr の再現） ----------
    ポスターと再生ボタンだけ先に出し、押されたときに初めて iframe を作る。
@@ -2760,23 +2107,39 @@ const FX = {
 };
 const rnd = (a, b) => a + Math.random() * (b - a);
 
+/* v7: エフェクト5案（シェルの「エフェクト案」）。
+   サイズ・数・速度の係数と開始位置をここで組み直し、
+   軌道の違い（横断/ポップ）はCSSの animation-name 上書きに任せる */
+/* エフェクトは「ふわり大きめ」で確定（2026-09-19） */
+const FXVOPTS = { big: { size: 1.5, n: .65, dur: 1.45 } };
+let FXV = "big";
+function buildFx(){
+const fxo = FXVOPTS[FXV];
 document.querySelectorAll("[data-fx]").forEach(sec => {
   const spec = FX[sec.dataset.fx], layer = sec.querySelector(".fxlayer");
   if (!spec || !layer) return;
+  const N = Math.max(3, Math.round(spec.n * fxo.n));
   let html = "";
-  for (let i = 0; i < spec.n; i++) {
+  for (let i = 0; i < N; i++) {
     /* 奥行き。0=手前（大きい・速い・濃い） 1=奥（小さい・遅い・薄い） */
-    const depth = i / (spec.n - 1 || 1);
-    const sz = Math.round(spec.size[1] - (spec.size[1] - spec.size[0]) * depth);
-    const dur = (spec.dur[0] + (spec.dur[1] - spec.dur[0]) * depth) * rnd(.92, 1.08);
+    const depth = i / (N - 1 || 1);
+    const sz = Math.round((spec.size[1] - (spec.size[1] - spec.size[0]) * depth) * fxo.size);
+    const dur = (spec.dur[0] + (spec.dur[1] - spec.dur[0]) * depth) * rnd(.92, 1.08) * fxo.dur;
     const op = (1 - depth * .45).toFixed(2);
+    const pos = "";
 
     /* 起点は端末のある側。data-fxorigin で左右を指定する。
        ライブ配信は画面を左に置いたので、ハートも左から上がる */
     const origin = sec.dataset.fxorigin === "left";
-    /* 紙飛行機は左半分だけでなく、右側（PC版で説明画像が乗る領域の裏）まで散らす */
+    const made = spec.make(i);
+    const isChip = typeof made === "object" && made.chip;
+    const inner = isChip ? made.html : made;
+    /* 紙飛行機は左半分だけでなく、右側（PC版で説明画像が乗る領域の裏）まで散らす。
+       コメントチップは幅が広く、文言の列まで届くと白地に白文字が重なって
+       文章が読めなくなる（9/19指摘）ため、チップだけ発生帯を端末側に狭める */
     const left = spec.cls === "fx-plane"
       ? rnd(6, 76)
+      : isChip ? (origin ? rnd(5, 24) : rnd(68, 90))
       : (origin ? rnd(8, 44) : rnd(52, 90));
 
     /* 横ぶれを1つずつ変える。同じ軌道が並ぶと機械的に見えるため。
@@ -2795,12 +2158,8 @@ document.querySelectorAll("[data-fx]").forEach(sec => {
     const dx2 = spec.cls === "fx-plane" ? amp * .8  : -out * amp * (burst ? .2 : .7);
     const dx3 = spec.cls === "fx-plane" ? amp       : out * amp * (burst ? 1 : .45);
 
-    const made = spec.make(i);
-    const isChip = typeof made === "object" && made.chip;
-    const inner  = isChip ? made.html : made;
-
     html += '<span class="fx-item ' + spec.cls + (isChip ? " is-chip" : "") + '" style="' +
-      "left:" + left.toFixed(1) + "%;" +
+      "left:" + left.toFixed(1) + "%;" + pos +
       (isChip ? "" : "width:" + sz + "px;height:" + sz + "px;font-size:" + sz + "px;") +
       "--dx1:" + dx1.toFixed(0) + "px;--dx2:" + dx2.toFixed(0) + "px;--dx3:" + dx3.toFixed(0) + "px;" +
       "--op:" + op + ";" +
@@ -2809,6 +2168,8 @@ document.querySelectorAll("[data-fx]").forEach(sec => {
   }
   layer.innerHTML = html;
 });
+}
+buildFx();
 /* カード高さを測って飛距離に使う（translateY(%)は要素自身の高さ基準で使えない） */
 function measureFx(){
   document.querySelectorAll(".fxlayer").forEach(l => l.style.setProperty("--fxh", (l.clientHeight || 600) + "px"));
@@ -2908,56 +2269,34 @@ if (!isFrame) {
      実高さを --shellh に入れて、ヘッダーをシェルの下端から始める */
   const shellEl = document.querySelector(".shell");
   const setShellH = () =>
-    document.documentElement.style.setProperty("--shellh", shellEl.offsetHeight + "px");
+    document.documentElement.style.setProperty("--shellh",
+      (document.body.classList.contains("shell-off") ? 0 : shellEl.offsetHeight) + "px");
   setShellH();
   addEventListener("resize", setShellH);
-  const frame = document.getElementById("phoneFrame");
-  let anim = "mid";
-  let bg = BGPARAM || "plain";
-  let heroMode = params.get("hero") || "photo";
-  const reloadFrame = () => frame.src = "design-full-v6.html?frame=1&anim=" + anim + "&bg=" + bg +
-    "&hero=" + heroMode +
-    "&feat=" + (document.body.className.match(/feat-(\w+)/) || [, "scene"])[1] +
-    "&plan=" + (document.body.className.match(/plan-(\w+)/) || [, "flat"])[1] +
-    "&ath=" + (document.body.className.match(/ath-(\w+)/) || [, "marq"])[1] +
-    "&guide=" + (document.body.className.match(/guide-(\w+)/) || [, "light"])[1] +
-    "&hdr=" + (document.body.className.match(/hdr-(\w+)/) || [, "pill"])[1] +
-    (document.body.classList.contains("invfx") ? "&invfx=on" : "") +
-    (document.body.classList.contains("show-copy") ? "&copy=1" : "") +
-    (document.body.classList.contains("fx-off") ? "&fx=off" : "");
-  document.querySelectorAll("[data-anim]").forEach(b => b.addEventListener("click", () => {
-    anim = b.dataset.anim;
-    document.body.className = document.body.className.replace(/anim-\w+/, "anim-" + anim);
-    document.querySelectorAll("[data-anim]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.anim === anim)));
-    document.querySelectorAll(".rise").forEach(el => {
-      const r = el.getBoundingClientRect();
-      if (r.top < innerHeight && r.bottom > 0) el.classList.add("in");
-    });
-    onScroll();
-    if (document.body.classList.contains("is-phone")) reloadFrame();
-  }));
-  /* ヒーローのモード切替 */
-  document.querySelectorAll("[data-hero-mode]").forEach(b => b.addEventListener("click", () => {
-    const m = heroMode = b.dataset.heroMode;
-    document.body.className = document.body.className.replace(/hero-\w+/, "").trim() + " hero-" + m;
-    document.querySelectorAll("[data-hero-mode]").forEach(x =>
-      x.setAttribute("aria-pressed", String(x.dataset.heroMode === m)));
-    renderHeadline(m);
-    /* 見出しの立ち上がりを見せ直す */
-    const hero = document.querySelector(".hero");
-    hero.classList.remove("on");
-    requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add("on")));
-    syncHeroMode(m);
-    onScroll();
-    if (document.body.classList.contains("is-phone")) reloadFrame();
-  }));
-  document.getElementById("introBtn").addEventListener("click", playIntro);
-  /* 参考サイト再現モードは既定で見出しを隠しているので、重ねた状態も見られるようにする */
-  document.getElementById("copyBtn").addEventListener("click", e => {
-    const on = document.body.classList.toggle("show-copy");
-    e.currentTarget.setAttribute("aria-pressed", String(on));
-    if (document.body.classList.contains("is-phone")) reloadFrame();
+  /* v7: 切替UIの表示/非表示は手動トグルのみ（スクロール連動の自動非表示は廃止） */
+  document.getElementById("shellHideBtn").addEventListener("click", () => {
+    document.body.classList.add("shell-off"); setShellH();
   });
+  document.getElementById("shellShowBtn").addEventListener("click", () => {
+    document.body.classList.remove("shell-off"); setShellH();
+  });
+  const frame = document.getElementById("phoneFrame");
+  let bg = BGPARAM || "plain";
+  /* play=true のとき、iframe側で読み込み直後にイントロを1回再生させる */
+  const reloadFrame = (play) => frame.src = "design-full-v7.html?frame=1&bg=" + bg +
+    "&intro=" + INTRO + (play ? "&play=1" : "") +
+    "&guide=" + (document.body.className.match(/guide-(\w+)/) || [, "light"])[1];
+  /* v7: イントロの選択。選んだ案はその場で1回プレビューする */
+  document.querySelectorAll("[data-intro]").forEach(b => b.addEventListener("click", () => {
+    INTRO = b.dataset.intro;
+    document.querySelectorAll("[data-intro]").forEach(x =>
+      x.setAttribute("aria-pressed", String(x.dataset.intro === INTRO)));
+    /* スマホ表示中はiframe側で再生（&play=1で再読込）、PC表示中はこの場で再生 */
+    if (document.body.classList.contains("is-phone")) reloadFrame(true);
+    else playIntro();
+  }));
+  document.querySelectorAll("[data-intro]").forEach(x =>
+    x.setAttribute("aria-pressed", String(x.dataset.intro === INTRO)));
   /* 機能の見せ方 / PLAN / 反転演出 */
   const seg = (attr, prefix, after) =>
     document.querySelectorAll("[data-" + attr + "]").forEach(b => b.addEventListener("click", () => {
@@ -2970,43 +2309,16 @@ if (!isFrame) {
       onScroll();
       if (document.body.classList.contains("is-phone")) reloadFrame();
     }));
-  seg("feat", "feat-");
-  /* 案を切り替えたら、前の案でJSが書いたインラインの変数を消す */
-  seg("ath", "ath-", v => ATH.show(v));
-  seg("plan", "plan-", () => document.querySelectorAll(".pcard").forEach(c => {
-    ["--rx", "--ry", "--tz", "--mx", "--my"].forEach(k => c.style.removeProperty(k));
-  }));
   seg("guide", "guide-");
-  seg("hdr", "hdr-");
   /* URLパラメータで開いたときに、押されているボタンの表示を合わせる */
-  [["hero-mode", /hero-(\w+)/], ["ent", /ent-(\w+)/], ["feat", /feat-(\w+)/],
-   ["plan", /plan-(\w+)/], ["ath", /ath-(\w+)/], ["guide", /guide-(\w+)/],
-   ["hdr", /hdr-(\w+)/]].forEach(([attr, re]) => {
+  [["guide", /guide-(\w+)/]].forEach(([attr, re]) => {
     const cur = (document.body.className.match(re) || [])[1];
     document.querySelectorAll("[data-" + attr + "]").forEach(x => {
       const key = attr === "hero-mode" ? "heroMode" : attr;
       x.setAttribute("aria-pressed", String(x.dataset[key] === cur));
     });
   });
-  document.querySelectorAll("[data-inv]").forEach(x =>
-    x.setAttribute("aria-pressed",
-      String((x.dataset.inv === "on") === document.body.classList.contains("invfx"))));
-  document.querySelectorAll("[data-inv]").forEach(b => b.addEventListener("click", () => {
-    const on = b.dataset.inv === "on";
-    document.body.classList.toggle("invfx", on);
-    document.querySelectorAll("[data-inv]").forEach(x =>
-      x.setAttribute("aria-pressed", String((x.dataset.inv === "on") === on)));
-    window.syncInvert();
-    if (document.body.classList.contains("is-phone")) reloadFrame();
-  }));
 
-  /* work再現（入口型）の中央の見せ方 */
-  document.querySelectorAll("[data-ent]").forEach(b => b.addEventListener("click", () => {
-    const v = b.dataset.ent;
-    document.body.className = document.body.className.replace(/ent-\w+/, "ent-" + v);
-    document.querySelectorAll("[data-ent]").forEach(x =>
-      x.setAttribute("aria-pressed", String(x.dataset.ent === v)));
-  }));
 
   /* 機能セクションの背景切替 */
   document.querySelectorAll("[data-bg]").forEach(b => b.addEventListener("click", () => {
@@ -3017,16 +2329,6 @@ if (!isFrame) {
     if (document.body.classList.contains("is-phone")) reloadFrame();
   }));
 
-  const fxOnBtn = document.getElementById("fxOn"), fxOffBtn = document.getElementById("fxOff");
-  const setFx = on => {
-    document.body.classList.toggle("fx-off", !on);
-    fxOnBtn.setAttribute("aria-pressed", String(on));
-    fxOffBtn.setAttribute("aria-pressed", String(!on));
-    if (document.body.classList.contains("is-phone")) reloadFrame();
-  };
-  fxOnBtn.addEventListener("click", () => setFx(true));
-  fxOffBtn.addEventListener("click", () => setFx(false));
-  setFx(!document.body.classList.contains("fx-off"));
 
   const btnPc = document.getElementById("btnPc"), btnSp = document.getElementById("btnSp");
   const setView = phone => {
