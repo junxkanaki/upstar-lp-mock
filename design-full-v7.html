@@ -1073,17 +1073,17 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
 /* ==========================================================================
    2026-09-24 メンバーFB対応: ストアCTAを公式バッジに変更（本実装と同期）
    ========================================================================== */
+/* Googleバッジは画像側の上下余白をトリミング済み（646x192）。
+   両バッジ同一の高さ指定で揃え、ボタン間の余白を広げる（2026-09-24 FB） */
 .cta,.stickycta{align-items:center}
+.cta{gap:16px}
+.stickycta{gap:14px}
 .storebadge{display:block;transition:transform .25s ease}
 .storebadge:hover{transform:translateY(-2px)}
 .storebadge img{height:52px;width:auto;display:block}
-/* Google公式バッジ（PNG）は画像内余白をネガティブマージンで相殺して高さを揃える */
-.storebadge.gp img{height:78px;margin:-13px -9px}
 .stickycta .storebadge img{height:44px}
-.stickycta .storebadge.gp img{height:66px;margin:-11px -8px}
 @media(max-width:640px){
   .storebadge img{height:46px}
-  .storebadge.gp img{height:69px;margin:-11px -8px}
 }
 </style>
 </head>
