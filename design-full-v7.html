@@ -517,27 +517,27 @@ body.anim-low .stmt .shot img{animation:none}
    枠の縦横比は提供画像の実寸（後ろ=04: 900x857 / 前=03: 900x408）に合わせ、切り抜きが起きないようにする。
    UI画像=LP風:手紙3枚 のときは、後ろの1枚が3枚構成（draft-lp-fanletter-trio、縦4:5）に差し替わる */
 /* 後ろのカードが端末と被りすぎるため、上へ大きくはみ出させる（9/19指摘） */
-.fscene:nth-of-type(1) .sat-a{width:94%;aspect-ratio:900/857;right:-28%;top:-13%;rotate:6deg}
-.fscene:nth-of-type(1) .sat-b{width:96%;aspect-ratio:900/408;left:-32%;bottom:9%;rotate:-5deg}
+.fscene:nth-of-type(2) .sat-a{width:94%;aspect-ratio:900/857;left:-28%;top:-13%;rotate:-6deg}
+.fscene:nth-of-type(2) .sat-b{width:96%;aspect-ratio:900/408;right:-32%;bottom:9%;rotate:5deg}
 /* 提供カード（03/04）は角丸が画像側に焼き込まれた透過PNG。
    枠側の16px角丸クリッピングだと四隅が切れるため、クリッピングと矩形シャドウをやめ、
    画像のアルファ形状に沿う drop-shadow に切り替える（9/19指摘対応） */
-.fscene:nth-of-type(1) .sat-a.filled,.fscene:nth-of-type(1) .sat-b.filled{
+.fscene:nth-of-type(2) .sat-a.filled,.fscene:nth-of-type(2) .sat-b.filled{
   border-radius:0;overflow:visible;box-shadow:none;
   filter:drop-shadow(0 22px 40px rgba(10,10,11,.24))}
 /* 2枚目: ライブ配信 — メイン画面（端末）のみ（9/19指示でサテライト2枚を廃止）。
    端末サイズは上の統一ルール（最大300px）に含まれる。
    画面が暗い画像のため、.scr の白背景が角丸の縁にサブピクセルで覗いて
    白線に見える（9/19指摘）→ このシーンだけ黒下地にする */
-.fscene:nth-of-type(2) .app .scr{background:#000}
+.fscene:nth-of-type(3) .app .scr{background:#000}
 /* 3枚目: 日常のやりとり — メイン端末のみ（9/19指示で前後のサテライトを廃止） */
 @media(max-width:900px){
   /* 提供画像が入ったため、スマホでも前後のカードを表示する（9/19指摘対応）。
      はみ出し量はPCより詰めて画面端で切れないようにする。
      端末のサイズ・中央寄せはファイル末尾の上書きブロックで行う
      （既存のレスポンシブ規則が後方にあり、ここで書いても負けるため） */
-  .fscene:nth-of-type(1) .sat-a{right:-16%;top:-7%}  /* スマホは文言と重ならない範囲で上へ */
-  .fscene:nth-of-type(1) .sat-b{left:-20%}
+  .fscene:nth-of-type(2) .sat-a{left:-16%;top:-7%}  /* スマホは文言と重ならない範囲で上へ */
+  .fscene:nth-of-type(2) .sat-b{right:-20%}
 }
 
 /* ==========================================================================
@@ -1209,7 +1209,24 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
     </div></div>
 
 
-    <section class="fscene" data-fx="plane" data-fxorigin="left" data-word="Fan Letter" data-shot="assets/shot-fanletter.png">
+    <section class="fscene" data-fx="emoji" data-fxorigin="right" data-word="Everyday" data-shot="assets/shot-chat.png">
+      <div class="bg"><img data-scene="2" alt=""></div>
+      <div class="bgalt" aria-hidden="true"><span class="bw"></span><img class="bblur" alt=""></div>
+      <div class="fxlayer" aria-hidden="true"></div>
+      <div class="inner wrap">
+        <div class="rise">
+          <p class="kick">Everyday</p>
+          <h3>本音が届く。<br>気持ちを返せる。</h3>
+          <p>選手から届くメッセージを読み、言葉やリアクションで返せます。日々のやりとりが、そのまま応援になります。</p>
+        </div>
+        <!-- 2026-09-19: メインはユーザー提供画像（02）。前後のサテライトは「なし」の指示で撤去 -->
+        <div class="app rise"><span class="notch"></span>
+          <div class="scr"><span class="sat sat-scr filled"><img src="assets/fanletter-02.png" alt="選手とのチャット画面（提供画像）"></span></div></div>
+      </div>
+      <p class="who" data-scenename="2"></p>
+    </section>
+
+    <section class="fscene rev" data-fx="plane" data-fxorigin="left" data-word="Fan Letter" data-shot="assets/shot-fanletter.png">
       <div class="bg"><img data-scene="0" alt=""></div>
       <div class="bgalt" aria-hidden="true"><span class="bw"></span><img class="bblur" alt=""></div>
       <div class="fxlayer" aria-hidden="true"></div>
@@ -1229,7 +1246,7 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
       <p class="who" data-scenename="0"></p>
     </section>
 
-    <section class="fscene rev" data-fx="heart" data-fxorigin="left" data-word="Live" data-shot="assets/shot-live.png">
+    <section class="fscene" data-fx="heart" data-fxorigin="right" data-word="Live" data-shot="assets/shot-live.png">
       <div class="bg"><img data-scene="1" alt=""></div>
       <div class="bgalt" aria-hidden="true"><span class="bw"></span><img class="bblur" alt=""></div>
       <div class="fxlayer" aria-hidden="true"></div>
@@ -1244,23 +1261,6 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
           <div class="scr"><img src="assets/livestream-01.png" alt="ライブ配信の画面（提供画像）"></div></div>
       </div>
       <p class="who" data-scenename="1"></p>
-    </section>
-
-    <section class="fscene" data-fx="emoji" data-fxorigin="right" data-word="Everyday" data-shot="assets/shot-chat.png">
-      <div class="bg"><img data-scene="2" alt=""></div>
-      <div class="bgalt" aria-hidden="true"><span class="bw"></span><img class="bblur" alt=""></div>
-      <div class="fxlayer" aria-hidden="true"></div>
-      <div class="inner wrap">
-        <div class="rise">
-          <p class="kick">Everyday</p>
-          <h3>本音が届く。<br>気持ちを返せる。</h3>
-          <p>選手から届くメッセージを読み、言葉やリアクションで返せます。日々のやりとりが、そのまま応援になります。</p>
-        </div>
-        <!-- 2026-09-19: メインはユーザー提供画像（02）。前後のサテライトは「なし」の指示で撤去 -->
-        <div class="app rise"><span class="notch"></span>
-          <div class="scr"><span class="sat sat-scr filled"><img src="assets/fanletter-02.png" alt="選手とのチャット画面（提供画像）"></span></div></div>
-      </div>
-      <p class="who" data-scenename="2"></p>
     </section>
   </div>
 
@@ -2157,7 +2157,7 @@ document.querySelectorAll("[data-fx]").forEach(sec => {
        文章が読めなくなる（9/19指摘）ため、チップだけ発生帯を端末側に狭める */
     const left = spec.cls === "fx-plane"
       ? rnd(6, 76)
-      : isChip ? (origin ? rnd(5, 24) : rnd(68, 90))
+      : isChip ? (origin ? rnd(5, 24) : rnd(58, 78))
       : (origin ? rnd(8, 44) : rnd(52, 90));
 
     /* 横ぶれを1つずつ変える。同じ軌道が並ぶと機械的に見えるため。
