@@ -166,8 +166,6 @@ body.list-a .ftr{border-top:1px solid rgba(255,255,255,.12)}
   <div class="phead"><div class="wrap">
     <p class="kick rise">Athletes</p>
     <h1 class="rise">For The<br>Athletes</h1>
-    <p class="lead rise"><b data-count></b> 名の選手が、UPSTARで発信しています。<br>
-      サッカー・フットサルを中心に、これからも増えていきます。</p>
   </div></div>
 
   <!-- ダークグリッド（確定） -->
@@ -200,7 +198,7 @@ if (isFrame) document.body.classList.add("is-frame");
 
 
 const img = (u, w) => u + (u.includes("?") ? "&" : "?") + "w=" + w + "&fm=webp";
-document.querySelector("[data-count]").textContent = PLAYERS.length;
+/* リード文（人数表示）は2026-09-24のFBで削除 */
 
 /* ---- 入場アニメ ---- */
 const io = new IntersectionObserver(es => es.forEach(e => {

@@ -1069,6 +1069,22 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
 @media(max-width:900px){
   .fscene .app,.fscene.rev .app{width:min(64vw,250px);justify-self:center}
 }
+
+/* ==========================================================================
+   2026-09-24 メンバーFB対応: ストアCTAを公式バッジに変更（本実装と同期）
+   ========================================================================== */
+.cta,.stickycta{align-items:center}
+.storebadge{display:block;transition:transform .25s ease}
+.storebadge:hover{transform:translateY(-2px)}
+.storebadge img{height:52px;width:auto;display:block}
+/* Google公式バッジ（PNG）は画像内余白をネガティブマージンで相殺して高さを揃える */
+.storebadge.gp img{height:78px;margin:-13px -9px}
+.stickycta .storebadge img{height:44px}
+.stickycta .storebadge.gp img{height:66px;margin:-11px -8px}
+@media(max-width:640px){
+  .storebadge img{height:46px}
+  .storebadge.gp img{height:69px;margin:-11px -8px}
+}
 </style>
 </head>
 <body class="anim-mid">
@@ -1157,8 +1173,8 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
       <div class="sub">
         <p>勝った日も、うまくいかない日も、<br>選手の人生を応援できる場所。</p>
         <div class="cta">
-          <a class="btn btn-w" href="#">App Store で入手</a>
-          <a class="btn btn-o" href="#">Google Play で入手</a>
+          <a class="storebadge" href="#"><img src="assets/badge-appstore.svg" alt="App Storeからダウンロード"></a>
+          <a class="storebadge gp" href="#"><img src="assets/badge-googleplay.png" alt="Google Playで手に入れよう"></a>
         </div>
       </div>
     </div>
@@ -1177,8 +1193,6 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
         <div class="shot rise"><img src="assets/stmt-phones.png" alt="UPSTARアプリの画面"></div>
       </div>
     </div>
-    <div class="ticker"><div class="tt" data-tt>
-      <span>Beyond The Sports ·</span><span>Beyond The Sports ·</span></div></div>
   </section>
 
 
@@ -1372,8 +1386,8 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
 </div>
 
 <div class="stickycta">
-  <a class="btn btn-w" href="#">App Store で入手</a>
-  <a class="btn btn-o" href="#">Google Play で入手</a>
+  <a class="storebadge" href="#"><img src="assets/badge-appstore.svg" alt="App Storeからダウンロード"></a>
+  <a class="storebadge gp" href="#"><img src="assets/badge-googleplay.png" alt="Google Playで手に入れよう"></a>
 </div>
 
 <script src="assets/players.js"></script>
