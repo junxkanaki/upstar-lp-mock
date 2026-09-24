@@ -1083,13 +1083,12 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
 /* 2バッジの枠を縦横同一サイズに統一（比率保持のままcontainで収める） */
 .storebadge img{width:176px;height:52px;object-fit:contain;display:block}
 .stickycta .storebadge img{width:148px;height:44px}
-/* 上部バー: 黒いバー上のため白背景チップ+公式バッジ（2026-09-24 FB） */
-.hdr nav .dlb{display:block;background:#fff;border-radius:9px;padding:4px 8px}
-.hdr nav .dlb img{width:92px;height:27px;object-fit:contain;display:block}
+/* 上部バー: 白ピル+ストアアイコン+テキスト（2026-09-24 FB 案A） */
+.hdr nav .dl{display:inline-flex;align-items:center;gap:7px}
+.hdr nav .dl .ic{width:15px;height:15px;object-fit:contain;display:block}
 @media(max-width:640px){
   .storebadge img{width:156px;height:46px}
-  .hdr nav .dlb{padding:3px 6px;border-radius:7px}
-  .hdr nav .dlb img{width:76px;height:23px}
+  .hdr nav .dl .ic{width:12px;height:12px}
 }
 </style>
 </head>
@@ -1132,8 +1131,8 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
         <a class="lk" href="#features">Features</a>
         <a class="lk" href="#movie">Movie</a>
         <a class="lk" href="#athletes">Athletes</a>
-        <a class="dlb" href="#"><img src="assets/badge-appstore.svg" alt="App Storeからダウンロード"></a>
-        <a class="dlb" href="#"><img src="assets/badge-googleplay.png" alt="Google Playで手に入れよう"></a>
+        <a class="dl" href="#"><img class="ic" src="assets/icon-apple.svg" alt="">App Store</a>
+        <a class="dl" href="#"><img class="ic" src="assets/icon-googleplay.png" alt="">Google Play</a>
       </nav>
     </div>
   </header>
