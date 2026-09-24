@@ -1090,6 +1090,13 @@ body.anim-low .hero .shot img,body.anim-low .fscene .bg img{transform:none !impo
   .storebadge img{width:156px;height:46px}
   .hdr nav .dl .ic{width:12px;height:12px}
 }
+/* ファンレターの上余白がPCで狭く見える指摘（9/24）への対応。
+   金カードが上に-8%覗くぶんコンテンツ外接が上寄りになるため、
+   端末クラスタごと30px下げて上下余白を対称（約99px/99px）にする。
+   SPは余白が既に均等なため対象外 */
+@media(min-width:901px){
+  .fscene:nth-of-type(2) .app{translate:0 30px}
+}
 </style>
 </head>
 <body class="anim-mid">
