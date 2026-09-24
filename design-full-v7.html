@@ -725,8 +725,8 @@ body.bg-blur .bgalt .bw{position:absolute;left:var(--pad);bottom:-4%;white-space
 
 /* 全画面シーンの前にも見出しを置く（カード案と揃える） */
 .feathead{background:var(--ink);color:#fff;
-  /* 下余白はFB（9/24）で約18pxに短縮。上余白はヒーローとの間を削除するFB（9/24）で0に */
-  padding:0 0 clamp(12px,2vh,20px);
+  /* 下余白はFB（9/24）で約18pxに短縮。上余白はFB（9/24）で当初の約半分（余白なしはNG、広すぎもNG） */
+  padding:clamp(40px,6vh,72px) 0 clamp(12px,2vh,20px);
   transition:background-color .85s ease,color .85s ease}
 .feathead h2{font-size:clamp(34px,6vw,96px);line-height:.94;letter-spacing:-.045em;font-weight:900;
   text-transform:uppercase}
