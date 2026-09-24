@@ -72,6 +72,9 @@ body:not(.is-frame) .hdr{top:var(--shellh,0px)}
 .hdr nav{display:flex;align-items:center;gap:var(--s4)}
 .hdr nav .lk{font-size:.9375rem;font-weight:600;color:rgba(255,255,255,.92)}
 .hdr nav .dl{background:#fff;color:#000;font-size:.9375rem;font-weight:700;padding:9px 15px;border-radius:11px}
+/* 上部バー: 白背景チップ+公式バッジ（2026-09-24 FB） */
+.hdr nav .dlb{display:block;background:#fff;border-radius:9px;padding:4px 8px}
+.hdr nav .dlb img{width:92px;height:27px;object-fit:contain;display:block}
 
 /* 入場アニメ（軽量版）: .rise が画面に入ったらふわっと上がる */
 .rise{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.16,.86,.28,1)}
@@ -125,6 +128,8 @@ body.list-a .ftr{border-top:1px solid rgba(255,255,255,.12)}
   .hdr .logo{width:84px;height:20px}
   .hdr nav{gap:6px}
   .hdr nav .dl{font-size:12px;padding:8px 10px;border-radius:9px}
+  .hdr nav .dlb{padding:3px 6px;border-radius:7px}
+  .hdr nav .dlb img{width:76px;height:23px}
   /* 現行 /athletes はSPで2カラム。案Aはそれを踏襲 */
   .la .grid{grid-template-columns:repeat(2,1fr);gap:14px}
   .la .card .name{font-size:15px;margin-top:10px}
@@ -156,8 +161,8 @@ body.list-a .ftr{border-top:1px solid rgba(255,255,255,.12)}
         <a class="lk" href="design-full-v7.html#features">Features</a>
         <a class="lk" href="design-full-v7.html#movie">Movie</a>
         <a class="lk" href="design-full-v7.html#athletes">Athletes</a>
-        <a class="dl" href="#">App Store</a>
-        <a class="dl" href="#">Google Play</a>
+        <a class="dlb" href="#"><img src="assets/badge-appstore.svg" alt="App Storeからダウンロード"></a>
+        <a class="dlb" href="#"><img src="assets/badge-googleplay.png" alt="Google Playで手に入れよう"></a>
       </nav>
     </div>
   </header>
